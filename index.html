@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#c0c0c0">
-  <title>Prompt Toolbox v30</title>
+  <title>Prompt Toolbox v33</title>
   <style>
     :root {
       color-scheme: light;
@@ -589,7 +589,7 @@
     .backup-gallery-card { min-width:0; padding:5px; border:1px solid var(--bp-line); background:#fff; box-shadow:1px 1px 0 rgba(80,50,65,.13); cursor:pointer; transition:transform .16s ease, box-shadow .16s ease; }
     .backup-gallery-card:hover { transform:translateY(-2px); box-shadow:2px 3px 0 rgba(80,50,65,.18); }
     .backup-gallery-card.wardrobe-entry { border:2px double #9b9f7b; background:#fcfbed; }
-    .backup-gallery-cover { position:relative; display:block; width:100%; aspect-ratio:4/5; overflow:hidden; padding:0; border:1px solid #d7c9cf; background:#eee6e8; }
+    .backup-gallery-cover { position:relative; display:block; width:100%; aspect-ratio:3/4; overflow:hidden; padding:0; border:1px solid #d7c9cf; background:#eee6e8; }
     .backup-gallery-cover img { display:block; width:100%; height:100%; object-fit:cover; transition:transform .25s ease; }
     .backup-gallery-card:hover .backup-gallery-cover img { transform:scale(1.025); }
     .backup-gallery-cover.no-image { display:grid; place-items:center; color:#a78a99; font:italic 12px Georgia,serif; background:repeating-linear-gradient(135deg,#f6edf1 0 7px,#f0e3e9 7px 14px); }
@@ -615,8 +615,8 @@
     .wardrobe-detail .backup-detail-kicker { color:#788260; }
     .backup-detail-photo-wrap { position:relative; display:grid; grid-template-columns:34px minmax(0,1fr) 34px; align-items:center; gap:5px; padding:7px; border:1px solid #d8c6cf; background:#eee8e8; }
     .wardrobe-detail .backup-detail-photo-wrap { border-color:#c2c5a5; background:#ebeddc; }
-    .backup-detail-photo { display:flex; align-items:center; justify-content:center; min-width:0; min-height:300px; max-height:72vh; overflow:hidden; background:#ddd4d5; }
-    .backup-detail-photo img { display:block; width:100%; max-height:72vh; object-fit:contain; }
+    .backup-detail-photo { position:relative; display:flex; align-items:center; justify-content:center; width:100%; max-width:440px; aspect-ratio:3/4; min-width:0; min-height:0; max-height:none; margin:0 auto; overflow:hidden; background:#ddd4d5; }
+    .backup-detail-photo img { display:block; width:100%; height:100%; max-height:none; object-fit:cover; }
     .backup-detail-photo .backup-no-photo { color:#927f88; font:italic 14px Georgia,serif; }
     .backup-photo-arrow { width:32px; min-width:32px; height:48px; padding:0; border:1px solid var(--bp-line); background:#fff9f8; color:var(--bp-ink); font:28px/1 Georgia,serif; }
     .backup-photo-arrow:disabled { opacity:.25; cursor:default; }
@@ -652,7 +652,7 @@
     .wardrobe-compose .backup-upload-zone { border-color:#aeb28d; background:#f8f8ec; }
     .backup-file-input { width:100%; min-height:32px; padding:4px; border:1px solid var(--bp-line); background:#fff; font-size:10px; }
     .backup-image-preview { display:flex; flex-wrap:wrap; gap:7px; min-height:0; margin-top:8px; }
-    .backup-image-thumb { position:relative; width:90px; height:112px; overflow:hidden; border:2px solid #fff; outline:1px solid var(--bp-line); background:#eee; }
+    .backup-image-thumb { position:relative; width:90px; height:auto; aspect-ratio:3/4; overflow:hidden; border:2px solid #fff; outline:1px solid var(--bp-line); background:#eee; }
     .backup-image-thumb img { width:100%; height:100%; object-fit:cover; }
     .backup-image-thumb button { position:absolute; top:3px; right:3px; min-width:21px; min-height:21px; padding:0; }
     .backup-block-heading { display:flex; justify-content:space-between; align-items:center; gap:7px; margin:12px 0 6px; }
@@ -670,16 +670,42 @@
       .backup-site { padding:6px; }
       .backup-home-title { font-size:29px; }
       .backup-gallery-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
-      .backup-gallery-cover { aspect-ratio:4/5; }
+      .backup-gallery-cover { aspect-ratio:3/4; }
       .backup-search-row { grid-template-columns:minmax(0,1fr) 118px; }
       .backup-detail-photo-wrap { grid-template-columns:27px minmax(0,1fr) 27px; gap:3px; padding:4px; }
       .backup-photo-arrow { width:26px; min-width:26px; height:42px; font-size:24px; }
-      .backup-detail-photo { min-height:220px; max-height:58vh; }
-      .backup-detail-photo img { max-height:58vh; }
+      .backup-detail-photo { min-height:0; max-height:none; }
+      .backup-detail-photo img { max-height:none; }
       .backup-compose-top { grid-template-columns:1fr 1fr; gap:6px; }
       .backup-home-footer { font-size:7px; letter-spacing:.5px; }
       .backup-post-pager button { font-size:9px; padding:4px 6px; }
     }
+
+
+    .backup-photo-adjust-row { display:flex; justify-content:center; margin:-2px 0 8px; }
+    .backup-photo-adjust-row button { min-height:21px; padding:2px 7px; border:1px solid var(--bp-line); background:#fff; color:var(--bp-ink); font:8px Tahoma,sans-serif; }
+    .backup-prompt-quick-copy { display:flex; flex-wrap:wrap; gap:5px; margin:0 0 8px; padding:7px; border:1px dotted var(--bp-line); background:#fffaf9; }
+    .backup-prompt-quick-copy.hidden { display:none; }
+    .backup-prompt-quick-copy button { min-height:25px; max-width:100%; padding:4px 9px; overflow:hidden; border:1px solid var(--bp-line); background:#fff; color:var(--bp-ink); font:bold 9px Tahoma,sans-serif; text-overflow:ellipsis; white-space:nowrap; }
+    .backup-image-thumb { display:flex; flex-direction:column; }
+    .backup-image-thumb img { flex:1; min-height:0; width:100%; height:100%; object-fit:cover; }
+    .backup-image-thumb .backup-image-thumb-actions { position:absolute; left:2px; right:2px; bottom:2px; display:flex; justify-content:space-between; gap:3px; }
+    .backup-image-thumb .backup-image-thumb-actions button { position:static; min-width:0; min-height:19px; padding:2px 5px; border:1px solid #76636f; background:rgba(255,255,255,.94); color:#493d46; font:8px Tahoma,sans-serif; }
+    .backup-crop-overlay { position:fixed; inset:0; z-index:10050; display:flex; align-items:center; justify-content:center; padding:14px; background:rgba(20,20,30,.62); }
+    .backup-crop-overlay.hidden { display:none !important; }
+    .backup-crop-window { width:min(100%,430px); max-height:94vh; overflow:auto; border:2px solid; border-color:#fff #404040 #404040 #fff; background:#c0c0c0; box-shadow:3px 3px 0 rgba(0,0,0,.5); color:#111; }
+    .backup-crop-titlebar { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:5px 7px; background:#000080; color:#fff; font:bold 11px Tahoma,sans-serif; }
+    .backup-crop-titlebar button { width:22px; min-width:22px; min-height:20px; padding:0; border:2px solid; border-color:#fff #555 #555 #fff; background:#c0c0c0; color:#111; font:bold 15px/1 Tahoma,sans-serif; }
+    .backup-crop-content { padding:10px; }
+    .backup-crop-stage { position:relative; width:min(100%,300px); aspect-ratio:3/4; margin:0 auto 10px; overflow:hidden; border:2px solid; border-color:#555 #fff #fff #555; background:#eee; touch-action:none; cursor:move; }
+    .backup-crop-stage img { display:block; width:100%; height:100%; object-fit:cover; object-position:50% 50%; transform:scale(1); transform-origin:center center; pointer-events:none; user-select:none; }
+    .backup-crop-controls { display:grid; gap:7px; }
+    .backup-crop-controls label { display:grid; grid-template-columns:92px minmax(0,1fr); align-items:center; gap:8px; color:#222; font:bold 9px Tahoma,sans-serif; }
+    .backup-crop-controls input { width:100%; min-width:0; accent-color:#000080; }
+    .backup-crop-actions { display:flex; justify-content:flex-end; gap:6px; margin-top:10px; }
+    .backup-crop-actions button { min-height:25px; padding:3px 9px; border:2px solid; border-color:#fff #555 #555 #fff; background:#c0c0c0; color:#111; font:9px Tahoma,sans-serif; }
+    .backup-crop-actions button.primary { background:#000080; color:#fff; border-color:#fff #333 #333 #fff; }
+    @media (max-width:600px) { .backup-crop-window { max-height:90vh; } .backup-crop-stage { width:min(100%,260px); } }
 
     /* Outfit Designer tab */
     .outfit-intro-note { margin: 0 0 9px; color: #444; font-size: 10px; line-height: 1.5; }
@@ -1214,6 +1240,7 @@
                 <button class="backup-photo-arrow" id="backupNextImage" type="button" aria-label="다음 이미지">›</button>
               </div>
               <div class="backup-photo-count" id="backupPhotoCount">0 / 0</div>
+              <div class="backup-photo-adjust-row"><button class="small" id="backupAdjustCurrentPhoto" type="button">ADJUST CROP</button></div>
 
               <div class="backup-detail-info">
                 <div class="backup-detail-category" id="backupDetailCategory">CATEGORY</div>
@@ -1227,6 +1254,7 @@
                   <span>✦ PROMPT BLOCKS</span>
                   <button class="primary small" id="backupDetailCopyAll" type="button">COPY ALL</button>
                 </div>
+                <div id="backupPromptQuickCopy" class="backup-prompt-quick-copy hidden" aria-label="프롬프트 바로 복사"></div>
                 <div id="backupDetailPrompts" class="backup-detail-prompts"></div>
               </div>
 
@@ -1447,7 +1475,7 @@
 
   <script>
 (() => {
-  // Prompt Toolbox v32: persistent restore + non-destructive legacy data recovery.
+  // Prompt Toolbox v33: prompt quick-copy and 3:4 image crop controls.
   const ROOMS_KEY = 'promptToolbox.rooms.v28';
   const RESET_KEY = 'promptToolbox.v28.roomResetDone';
   const REMEMBERED_ROOM_KEY = 'promptToolbox.v30.rememberedRoom';
@@ -1552,7 +1580,7 @@
       } catch (_) { resolve(); }
     });
   }
-  // v32 never deletes previous storage. Older releases removed room-scoped data before
+  // v33 preserves the v32 room and backup storage keys. Older releases removed room-scoped data before
   // reconnecting the legacy store; keep all known stores intact and migrate by copying.
   async function discardPreviousRoomData() { return; }
 
@@ -4996,7 +5024,7 @@ function startPromptToolbox() {
       const images = [];
       for (const image of (record.images || [])) {
         const dataUrl = await makeBackupImageDataUrl(image);
-        if (dataUrl) images.push({ name: image.name || 'image', dataUrl });
+        if (dataUrl) images.push({ name: image.name || 'image', dataUrl, crop: getBackupImageCrop(image) });
       }
       return { ...record, images };
     }
@@ -5024,6 +5052,155 @@ function startPromptToolbox() {
         return url;
       }
       return '';
+    }
+
+    function getBackupImageCrop(image) {
+      const crop = image?.crop || {};
+      const clamp = (value, min, max, fallback) => {
+        const number = Number(value);
+        return Number.isFinite(number) ? Math.max(min, Math.min(max, number)) : fallback;
+      };
+      return { x: clamp(crop.x, 0, 100, 50), y: clamp(crop.y, 0, 100, 50), zoom: clamp(crop.zoom, 1, 2.5, 1) };
+    }
+
+    function applyBackupImageCrop(img, image) {
+      const crop = getBackupImageCrop(image);
+      img.style.objectPosition = `${crop.x}% ${crop.y}%`;
+      img.style.transform = `scale(${crop.zoom})`;
+      img.style.transformOrigin = 'center center';
+    }
+
+    let backupCropTarget = null;
+    let backupCropQueue = [];
+    let backupCropUrls = [];
+    let backupCropDrag = null;
+
+    function getBackupCropTargetImage() {
+      if (!backupCropTarget) return null;
+      if (backupCropTarget.kind === 'draft') return backupDraftImages[backupCropTarget.index] || null;
+      const entry = backupEntriesData.find(item => item.id === backupCropTarget.entryId);
+      return entry?.images?.[backupCropTarget.index] || null;
+    }
+
+    function updateBackupCropPreview() {
+      const img = document.getElementById('backupCropImage');
+      const crop = {
+        x: Number(document.getElementById('backupCropX').value),
+        y: Number(document.getElementById('backupCropY').value),
+        zoom: Number(document.getElementById('backupCropZoom').value)
+      };
+      img.style.objectPosition = `${crop.x}% ${crop.y}%`;
+      img.style.transform = `scale(${crop.zoom})`;
+      return crop;
+    }
+
+    function openBackupCropEditor(kind, index, entryId = null) {
+      backupCropTarget = kind === 'draft' ? { kind, index } : { kind: 'saved', index, entryId };
+      const image = getBackupCropTargetImage();
+      if (!image) return;
+      backupCropUrls.forEach(url => URL.revokeObjectURL(url));
+      backupCropUrls = [];
+      const source = backupImageSource(image, backupCropUrls);
+      if (!source) return;
+      const crop = getBackupImageCrop(image);
+      document.getElementById('backupCropImage').src = source;
+      document.getElementById('backupCropZoom').value = String(crop.zoom);
+      document.getElementById('backupCropX').value = String(crop.x);
+      document.getElementById('backupCropY').value = String(crop.y);
+      updateBackupCropPreview();
+      document.getElementById('backupCropDialog').classList.remove('hidden');
+    }
+
+    function closeBackupCropEditor(continueQueue = true) {
+      document.getElementById('backupCropDialog').classList.add('hidden');
+      document.getElementById('backupCropImage').removeAttribute('src');
+      backupCropUrls.forEach(url => URL.revokeObjectURL(url));
+      backupCropUrls = [];
+      backupCropTarget = null;
+      backupCropDrag = null;
+      if (continueQueue && backupCropQueue.length) {
+        const next = backupCropQueue.shift();
+        openBackupCropEditor('draft', next);
+      }
+    }
+
+    async function persistBackupEntryAfterImageEdit(entry) {
+      if (backupStorageMode !== 'localStorage') {
+        try {
+          await backupDBRequest('readwrite', 'put', entry);
+          backupStorageMode = 'indexedDB';
+          return true;
+        } catch (error) { backupStorageMode = 'localStorage'; }
+      }
+      const localRecord = await makeLocalBackupRecord(entry);
+      const records = getLocalBackupRecords();
+      const index = records.findIndex(item => item.id === localRecord.id);
+      if (index >= 0) records[index] = localRecord; else records.unshift(localRecord);
+      if (!saveLocalBackupRecords(records)) throw new Error('이미지 위치를 저장하지 못했습니다.');
+      backupStorageMode = 'localStorage';
+      return true;
+    }
+
+    async function applyBackupCrop() {
+      const image = getBackupCropTargetImage();
+      if (!image || !backupCropTarget) return;
+      const previous = getBackupImageCrop(image);
+      const crop = updateBackupCropPreview();
+      image.crop = crop;
+      if (backupCropTarget.kind === 'saved') {
+        const entry = backupEntriesData.find(item => item.id === backupCropTarget.entryId);
+        try {
+          await persistBackupEntryAfterImageEdit(entry);
+          renderBackupEntries();
+          if (backupCurrentEntryId === entry.id) renderBackupDetail();
+          setStatus('사진 표시 위치를 저장했습니다.');
+        } catch (error) {
+          image.crop = previous;
+          setStatus(`사진 위치 저장 실패: ${error.message || '다시 시도해주세요.'}`);
+        }
+      } else {
+        renderBackupImagePreview();
+        setStatus('사진 자르기 위치를 적용했습니다.');
+      }
+      closeBackupCropEditor(true);
+    }
+
+    function initBackupCropEditor() {
+      ['backupCropZoom', 'backupCropX', 'backupCropY'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateBackupCropPreview);
+      });
+      document.getElementById('backupCropApply').addEventListener('click', applyBackupCrop);
+      document.getElementById('backupCropClose').addEventListener('click', () => closeBackupCropEditor(true));
+      document.getElementById('backupCropSkip').addEventListener('click', () => closeBackupCropEditor(true));
+      document.getElementById('backupCropReset').addEventListener('click', () => {
+        document.getElementById('backupCropZoom').value = '1';
+        document.getElementById('backupCropX').value = '50';
+        document.getElementById('backupCropY').value = '50';
+        updateBackupCropPreview();
+      });
+      const stage = document.getElementById('backupCropStage');
+      stage.addEventListener('pointerdown', event => {
+        backupCropDrag = { x: event.clientX, y: event.clientY, startX: Number(document.getElementById('backupCropX').value), startY: Number(document.getElementById('backupCropY').value) };
+        stage.setPointerCapture?.(event.pointerId);
+      });
+      stage.addEventListener('pointermove', event => {
+        if (!backupCropDrag) return;
+        const rect = stage.getBoundingClientRect();
+        const nextX = Math.max(0, Math.min(100, backupCropDrag.startX - (event.clientX - backupCropDrag.x) / rect.width * 100));
+        const nextY = Math.max(0, Math.min(100, backupCropDrag.startY - (event.clientY - backupCropDrag.y) / rect.height * 100));
+        document.getElementById('backupCropX').value = String(Math.round(nextX));
+        document.getElementById('backupCropY').value = String(Math.round(nextY));
+        updateBackupCropPreview();
+      });
+      ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => stage.addEventListener(type, () => { backupCropDrag = null; }));
+      document.getElementById('backupAdjustCurrentPhoto').addEventListener('click', () => {
+        const entry = backupEntriesData.find(item => item.id === backupCurrentEntryId);
+        if (!entry) return;
+        const images = (entry.images || []).filter(image => image.blob || image.dataUrl);
+        const current = images[backupCurrentImageIndex];
+        const index = entry.images.indexOf(current);
+        if (index >= 0) openBackupCropEditor('saved', index, entry.id);
+      });
     }
 
     function getBackupCategories() {
@@ -5091,15 +5268,25 @@ function applyBackupTemplate(template) {
         const img = document.createElement('img');
         img.alt = image.name || `업로드 이미지 ${index + 1}`;
         img.src = backupImageSource(image, backupPreviewUrls);
+        applyBackupImageCrop(img, image);
+        const actions = document.createElement('div');
+        actions.className = 'backup-image-thumb-actions';
+        const adjust = document.createElement('button');
+        adjust.type = 'button';
+        adjust.textContent = 'CROP';
+        adjust.title = '사진 자르기 및 위치 조절';
+        adjust.addEventListener('click', () => openBackupCropEditor('draft', index));
         const remove = document.createElement('button');
         remove.type = 'button';
         remove.textContent = '×';
         remove.title = '이미지 제거';
         remove.addEventListener('click', () => {
           backupDraftImages.splice(index, 1);
+          backupCropQueue = backupCropQueue.filter(queueIndex => queueIndex !== index).map(queueIndex => queueIndex > index ? queueIndex - 1 : queueIndex);
           renderBackupImagePreview();
         });
-        item.append(img, remove);
+        actions.append(adjust, remove);
+        item.append(img, actions);
         preview.appendChild(item);
       });
     }
@@ -5159,6 +5346,7 @@ function applyBackupTemplate(template) {
       backupEditingId = null;
       backupDraftBlocks = [makeBackupBlock('Prompt 1')];
       backupDraftImages = [];
+      backupCropQueue = [];
       document.getElementById('backupTemplate').value = 'general';
       document.getElementById('backupCategory').value = '일반 프롬프트';
       document.getElementById('backupTitle').value = '';
@@ -5242,7 +5430,7 @@ function applyBackupTemplate(template) {
       document.getElementById('backupDescription').value = entry.description || '';
       document.getElementById('backupTags').value = (entry.tags || []).join(', ');
       document.getElementById('backupImages').value = '';
-      backupDraftImages = (entry.images || []).map(image => ({ name: image.name, blob: image.blob, dataUrl: image.dataUrl }));
+      backupDraftImages = (entry.images || []).map(image => ({ name: image.name, blob: image.blob, dataUrl: image.dataUrl, crop: getBackupImageCrop(image) }));
       backupDraftBlocks = (entry.prompts || []).map(prompt => makeBackupBlock(prompt.label, prompt.text));
       if (!backupDraftBlocks.length) backupDraftBlocks = [makeBackupBlock('Prompt 1')];
       document.getElementById('backupSaveEntry').textContent = 'SAVE CHANGES';
@@ -5362,6 +5550,7 @@ function applyBackupTemplate(template) {
           img.alt = entry.title || '프롬프트 백업 이미지';
           img.loading = 'lazy';
           img.src = backupImageSource(firstImage, backupCardUrls);
+          applyBackupImageCrop(img, firstImage);
           cover.appendChild(img);
         } else {
           cover.classList.add('no-image');
@@ -5493,6 +5682,7 @@ function applyBackupTemplate(template) {
         const img = document.createElement('img');
         img.alt = entry.title || `이미지 ${backupCurrentImageIndex + 1}`;
         img.src = backupImageSource(images[backupCurrentImageIndex], backupDetailUrls);
+        applyBackupImageCrop(img, images[backupCurrentImageIndex]);
         photo.appendChild(img);
       } else {
         const noPhoto = document.createElement('div');
@@ -5504,10 +5694,24 @@ function applyBackupTemplate(template) {
       document.getElementById('backupPrevImage').disabled = images.length < 2 || backupCurrentImageIndex <= 0;
       document.getElementById('backupNextImage').disabled = images.length < 2 || backupCurrentImageIndex >= images.length - 1;
       document.getElementById('backupPhotoCount').classList.toggle('hidden', images.length < 2);
+      document.getElementById('backupAdjustCurrentPhoto').classList.toggle('hidden', images.length === 0);
+
+      const prompts = entry.prompts || [];
+      const quickCopy = document.getElementById('backupPromptQuickCopy');
+      quickCopy.replaceChildren();
+      quickCopy.classList.toggle('hidden', prompts.length < 2);
+      prompts.forEach((prompt, index) => {
+        const quickButton = document.createElement('button');
+        quickButton.type = 'button';
+        quickButton.title = `${prompt.label || `PROMPT ${index + 1}`} 복사`;
+        quickButton.textContent = prompt.label || `PROMPT ${index + 1}`;
+        quickButton.addEventListener('click', () => copyText(prompt.text, `${prompt.label || `PROMPT ${index + 1}`} 복사 완료`));
+        quickCopy.appendChild(quickButton);
+      });
 
       const promptWrap = document.getElementById('backupDetailPrompts');
       promptWrap.replaceChildren();
-      (entry.prompts || []).forEach((prompt, index) => {
+      prompts.forEach((prompt, index) => {
         const block = document.createElement('section');
         block.className = 'backup-detail-prompt';
         const head = document.createElement('div');
@@ -5611,6 +5815,7 @@ function applyBackupTemplate(template) {
     }
 
     function initPromptBackup() {
+      initBackupCropEditor();
       renderBackupCategoryOptions('일반 프롬프트');
       backupDraftBlocks = [makeBackupBlock('Prompt 1')];
       renderBackupDraftBlocks();
@@ -5653,9 +5858,15 @@ function applyBackupTemplate(template) {
 
       document.getElementById('backupImages').addEventListener('change', event => {
         const files = Array.from(event.target.files || []).filter(file => file.type.startsWith('image/'));
-        files.forEach(file => backupDraftImages.push({ name: file.name, blob: file }));
+        const startIndex = backupDraftImages.length;
+        files.forEach(file => backupDraftImages.push({ name: file.name, blob: file, crop: { x: 50, y: 50, zoom: 1 } }));
         renderBackupImagePreview();
-        if (files.length) setStatus(`${files.length}장의 이미지를 추가했습니다. SAVE POST를 눌러 보관하세요.`);
+        if (files.length) {
+          backupCropQueue = files.map((file, index) => startIndex + index);
+          setStatus(`${files.length}장의 사진을 추가했습니다. 3:4 프레임을 조절해주세요.`);
+          const first = backupCropQueue.shift();
+          openBackupCropEditor('draft', first);
+        }
         event.target.value = '';
       });
 
@@ -5731,5 +5942,25 @@ function applyBackupTemplate(template) {
   
 }
 </script>
+
+  <div id="backupCropDialog" class="backup-crop-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="backupCropTitle">
+    <section class="backup-crop-window">
+      <header class="backup-crop-titlebar"><span id="backupCropTitle">PHOTO CROP / 3:4</span><button type="button" id="backupCropClose" aria-label="닫기">×</button></header>
+      <div class="backup-crop-content">
+        <div class="backup-crop-stage" id="backupCropStage"><img id="backupCropImage" alt="사진 자르기 미리보기"></div>
+        <div class="backup-crop-controls">
+          <label>ZOOM <input id="backupCropZoom" type="range" min="1" max="2.5" step="0.01" value="1"></label>
+          <label>HORIZONTAL <input id="backupCropX" type="range" min="0" max="100" step="1" value="50"></label>
+          <label>VERTICAL <input id="backupCropY" type="range" min="0" max="100" step="1" value="50"></label>
+        </div>
+        <div class="backup-crop-actions">
+          <button type="button" id="backupCropReset">RESET</button>
+          <button type="button" id="backupCropSkip">CANCEL</button>
+          <button type="button" class="primary" id="backupCropApply">APPLY</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
 </body>
 </html>
