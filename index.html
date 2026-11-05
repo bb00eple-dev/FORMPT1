@@ -597,6 +597,10 @@
     .backup-cover-index { position:absolute; left:5px; top:5px; padding:3px 5px; background:rgba(255,250,246,.88); color:var(--bp-ink); font:8px Georgia,serif; letter-spacing:1px; }
     .backup-gallery-caption { padding:6px 2px 2px; }
     .backup-gallery-title { overflow:hidden; color:#634e5d; font:bold 10px/1.35 Tahoma,sans-serif; text-overflow:ellipsis; white-space:nowrap; }
+    .backup-gallery-title-row { display:flex; align-items:center; justify-content:space-between; gap:5px; min-width:0; }
+    .backup-pin-toggle { flex:0 0 auto; min-height:18px; padding:1px 5px; border:1px solid var(--bp-line); background:#fff; color:var(--bp-ink); font:8px Tahoma,sans-serif; line-height:1.2; }
+    .backup-pin-toggle.active { border-color:var(--bp-ink); background:var(--bp-ink); color:#fff; }
+    .backup-gallery-card.is-pinned { border-color:var(--bp-ink); }
     .backup-gallery-subline { display:flex; align-items:center; justify-content:space-between; gap:4px; margin-top:4px; color:#9a8792; font:8px Tahoma,sans-serif; }
     .backup-gallery-tagline { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .backup-gallery-kind { flex:0 0 auto; color:#9e7690; }
@@ -1183,7 +1187,7 @@
             <div class="backup-gallery-heading">
               <span>✧ RECENT POSTS</span>
               <span class="backup-gallery-rule"></span>
-              <span class="backup-gallery-sort">LATEST FIRST</span>
+              <span class="backup-gallery-sort">PINNED FIRST · LATEST</span>
             </div>
             <div id="backupEntries" class="backup-gallery-grid">
               <div class="backup-empty">아직 저장된 이미지가 없습니다.</div>
@@ -1194,6 +1198,7 @@
             <div class="backup-detail-toolbar">
               <button class="small" id="backupBackToGallery" type="button">◂ GALLERY</button>
               <div class="backup-detail-actions">
+                <button class="small" id="backupTogglePinCurrent" type="button">PIN</button>
                 <button class="small" id="backupEditCurrent" type="button">EDIT</button>
                 <button class="small" id="backupDeleteCurrent" type="button">DELETE</button>
               </div>
@@ -1444,6 +1449,7 @@
 (() => {
   const ROOMS_KEY = 'promptToolbox.rooms.v28';
   const RESET_KEY = 'promptToolbox.v28.roomResetDone';
+  const REMEMBERED_ROOM_KEY = 'promptToolbox.v30.rememberedRoom';
   const OLD_ROOMS_KEY = 'promptToolbox.rooms';
   const OLD_MIGRATION_KEY = 'promptToolbox.roomMigrationDone';
   const OLD_ROOM_PREFIX = 'promptToolbox.room.';
@@ -1454,6 +1460,8 @@
   const idInput = document.getElementById('roomId');
   const passwordInput = document.getElementById('roomPassword');
   const message = document.getElementById('roomGateMessage');
+  // Avoid briefly flashing the login form while checking this browser's remembered room.
+  gate.style.visibility = 'hidden';
   const openButton = document.getElementById('roomOpenButton');
   const createButton = document.getElementById('roomCreateButton');
   const accessForm = document.getElementById('roomAccessForm');
@@ -1580,10 +1588,13 @@
     passwordInput.value = '';
     window.__ptRoomKey = roomKey;
     window.__ptRoomId = roomId;
+    try { localStorage.setItem(REMEMBERED_ROOM_KEY, JSON.stringify({ roomKey, roomId })); }
+    catch (error) { console.warn('Could not remember this room in the browser.', error); }
     const roomLabel = document.getElementById('activeRoomLabel');
     roomLabel.textContent = roomId;
     roomLabel.title = roomId;
     gate.hidden = true;
+    gate.style.visibility = '';
     app.style.display = 'block';
     if (!window.__promptToolboxStarted) {
       window.__promptToolboxStarted = true;
@@ -1696,6 +1707,22 @@
     setMessage('이전 공간 데이터를 정리하지 못했습니다. 브라우저 저장소를 확인해주세요.');
     return false;
   });
+  cleanupReady.then(async ready => {
+    if (!ready) { gate.style.visibility = 'visible'; return; }
+    try {
+      const remembered = JSON.parse(localStorage.getItem(REMEMBERED_ROOM_KEY) || 'null');
+      const room = remembered && readRooms()[remembered.roomKey];
+      if (room && room.id === remembered.roomId) {
+        await enterRoom(remembered.roomKey, room.id);
+        return;
+      }
+      localStorage.removeItem(REMEMBERED_ROOM_KEY);
+    } catch (error) {
+      console.warn('Could not restore the remembered room.', error);
+      localStorage.removeItem(REMEMBERED_ROOM_KEY);
+    }
+    gate.style.visibility = 'visible';
+  });
   openButton.addEventListener('click', openRoom);
   createButton.addEventListener('click', createRoom);
   accessForm.addEventListener('submit', event => { event.preventDefault(); openRoom(); });
@@ -1750,7 +1777,10 @@
   [settingsModal, codeModal].forEach(modal => modal.addEventListener('click', event => {
     if (event.target === modal && modal === settingsModal) closeSettings();
   }));
-  window.lockPromptRoom = () => window.location.reload();
+  window.lockPromptRoom = () => {
+    try { localStorage.removeItem(REMEMBERED_ROOM_KEY); } catch (_) {}
+    window.location.reload();
+  };
 })();
 </script>
 <script>
@@ -5050,6 +5080,7 @@ function applyBackupTemplate(template) {
         tags: document.getElementById('backupTags').value.split(/[,\n]/).map(tag => tag.trim().replace(/^#/, '')).filter(Boolean),
         images: backupDraftImages.map(image => ({ name: image.name || 'image', blob: image.blob, dataUrl: image.dataUrl })),
         prompts,
+        pinned: !!existing?.pinned,
         createdAt: existing?.createdAt || now,
         updatedAt: now
       };
@@ -5152,7 +5183,8 @@ function applyBackupTemplate(template) {
           ...(entry.prompts || []).flatMap(prompt => [prompt.label, prompt.text])
         ].join(' ').toLowerCase();
         return searchable.includes(search);
-      }).sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')));
+      }).sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned)
+        || String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')));
     }
 
     function syncBackupDesignMode(view) {
@@ -5201,7 +5233,7 @@ function applyBackupTemplate(template) {
 
       backupFilteredEntries.forEach((entry, index) => {
         const card = document.createElement('article');
-        card.className = `backup-gallery-card${entry.template === 'wardrobe' ? ' wardrobe-entry' : ''}`;
+        card.className = `backup-gallery-card${entry.template === 'wardrobe' ? ' wardrobe-entry' : ''}${entry.pinned ? ' is-pinned' : ''}`;
         card.tabIndex = 0;
         card.setAttribute('role', 'button');
         card.setAttribute('aria-label', `${entry.title || '백업 글'} 열기`);
@@ -5231,9 +5263,21 @@ function applyBackupTemplate(template) {
 
         const caption = document.createElement('div');
         caption.className = 'backup-gallery-caption';
+        const titleRow = document.createElement('div');
+        titleRow.className = 'backup-gallery-title-row';
         const title = document.createElement('div');
         title.className = 'backup-gallery-title';
         title.textContent = entry.title || 'untitled';
+        const pinButton = document.createElement('button');
+        pinButton.type = 'button';
+        pinButton.className = `backup-pin-toggle${entry.pinned ? ' active' : ''}`;
+        pinButton.textContent = entry.pinned ? '📌 FIXED' : 'PIN';
+        pinButton.setAttribute('aria-label', entry.pinned ? '상단 고정 해제' : '상단 고정');
+        pinButton.addEventListener('click', event => {
+          event.stopPropagation();
+          toggleBackupPin(entry.id);
+        });
+        titleRow.append(title, pinButton);
         const subline = document.createElement('div');
         subline.className = 'backup-gallery-subline';
         const tagLine = document.createElement('span');
@@ -5243,7 +5287,7 @@ function applyBackupTemplate(template) {
         kind.className = 'backup-gallery-kind';
         kind.textContent = entry.template === 'wardrobe' ? 'CLOSET' : (entry.category || 'POST');
         subline.append(tagLine, kind);
-        caption.append(title, subline);
+        caption.append(titleRow, subline);
         card.appendChild(caption);
 
         card.addEventListener('keydown', event => {
@@ -5254,6 +5298,36 @@ function applyBackupTemplate(template) {
         });
         container.appendChild(card);
       });
+    }
+
+    async function toggleBackupPin(id) {
+      const entry = backupEntriesData.find(item => item.id === id);
+      if (!entry) return;
+      const previous = !!entry.pinned;
+      entry.pinned = !previous;
+      try {
+        if (backupStorageMode === 'localStorage') {
+          const records = getLocalBackupRecords();
+          const index = records.findIndex(item => item.id === id);
+          if (index < 0) throw new Error('저장된 글을 찾을 수 없습니다.');
+          records[index] = { ...records[index], pinned: entry.pinned };
+          if (!saveLocalBackupRecords(records)) throw new Error('상단 고정 상태를 저장하지 못했습니다.');
+        } else {
+          await backupDBRequest('readwrite', 'put', entry);
+        }
+        renderBackupEntries();
+        if (backupCurrentEntryId === id && !document.getElementById('backupDetailView').classList.contains('hidden')) {
+          renderBackupDetail();
+        }
+        setStatus(entry.pinned ? '백업 글을 상단에 고정했습니다.' : '상단 고정을 해제했습니다.');
+      } catch (error) {
+        entry.pinned = previous;
+        renderBackupEntries();
+        if (backupCurrentEntryId === id && !document.getElementById('backupDetailView').classList.contains('hidden')) {
+          renderBackupDetail();
+        }
+        setStatus(`상단 고정 저장 실패: ${error.message || '다시 시도해주세요.'}`);
+      }
     }
 
     function renderBackupDetail() {
@@ -5269,6 +5343,10 @@ function applyBackupTemplate(template) {
         position = backupFilteredEntries.findIndex(item => item.id === entry.id);
       }
       document.getElementById('backupDetailFrame').classList.toggle('wardrobe-detail', entry.template === 'wardrobe');
+      const pinCurrentButton = document.getElementById('backupTogglePinCurrent');
+      pinCurrentButton.textContent = entry.pinned ? '📌 FIXED' : 'PIN TO TOP';
+      pinCurrentButton.classList.toggle('primary', !!entry.pinned);
+      pinCurrentButton.onclick = () => toggleBackupPin(entry.id);
       document.getElementById('backupDetailKicker').textContent = entry.template === 'wardrobe' ? '♡ RETRO DRESS-UP / LOOK BOOK ♡' : '✦ MY PROMPT ARCHIVE / ENTRY ✦';
       document.getElementById('backupDetailCategory').textContent = (entry.category || 'UNCATEGORIZED').toUpperCase();
       const title = document.getElementById('backupDetailTitle');
