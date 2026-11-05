@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#c0c0c0">
-  <title>Prompt Toolbox v29 | Login</title>
+  <title>Prompt Toolbox v30</title>
   <style>
     :root {
       color-scheme: light;
@@ -65,8 +65,42 @@
       font-size: 10px;
       border: 1px solid white;
     }
-    .titlebar-spacer { flex: 1; }
-    .window-controls { display: flex; gap: 3px; }
+    .titlebar-spacer { flex: 1; min-width: 4px; }
+    .titlebar-room-label {
+      display: block;
+      flex: 0 1 auto;
+      min-width: 0;
+      max-width: clamp(64px, 26vw, 170px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin: 0 5px 0 2px;
+      font: normal 9px Tahoma, Arial, sans-serif;
+      opacity: .9;
+    }
+    .titlebar-settings, .titlebar-lock {
+      flex: 0 0 auto;
+      width: auto;
+      min-width: 0;
+      min-height: 19px;
+      height: 19px;
+      margin: 0 2px;
+      padding: 1px 5px;
+      border: 1px solid;
+      border-color: #fff #404040 #404040 #fff;
+      border-radius: 0;
+      background: #c0c0c0;
+      color: #111;
+      box-shadow: none;
+      font: bold 9px Tahoma, Arial, sans-serif;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .titlebar-settings:active, .titlebar-lock:active {
+      padding: 2px 4px 0 6px;
+      border-color: #404040 #fff #fff #404040;
+    }
+    .window-controls { display: flex; flex: 0 0 auto; gap: 3px; }
     .window-control {
       width: 17px;
       height: 16px;
@@ -820,6 +854,58 @@
     }
     .room-gate-message.success { color: #176b2c; }
     .room-local-note, .room-access-footer { display: none; }
+    .room-forgot-button {
+      display: block;
+      margin: 2px 0 0 auto;
+      min-height: 18px;
+      padding: 1px 3px;
+      border: 0;
+      background: transparent;
+      color: #000080;
+      box-shadow: none;
+      font: 10px Tahoma, Arial, sans-serif;
+      text-decoration: underline;
+    }
+    .room-recovery-panel { margin-top: 12px; padding-top: 10px; border-top: 1px solid #888; }
+    .room-recovery-panel[hidden] { display: none !important; }
+    .room-recovery-title { margin: 0 0 9px; font-size: 13px; }
+    .room-recovery-fields { display: grid; gap: 8px; }
+    .room-recovery-fields label { display: grid; grid-template-columns: 76px minmax(0,1fr); align-items: center; gap: 8px; font-size: 11px; }
+    .room-recovery-fields input {
+      width: 100%; min-width: 0; height: 25px; padding: 3px 6px;
+      border: 1px solid; border-color: #404040 #fff #fff #404040;
+      background: #fff; font: 12px Tahoma, Arial, sans-serif;
+    }
+    .room-recovery-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 9px; }
+    .room-recovery-actions button { min-height: 24px; padding: 2px 8px; font-size: 10px; }
+
+    .pt-modal {
+      position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center;
+      padding: 16px; background: rgba(0,0,0,.35); font-family: Tahoma, Arial, sans-serif;
+    }
+    .pt-modal[hidden] { display: none !important; }
+    .pt-dialog {
+      width: min(100%, 360px); padding: 3px; background: #c0c0c0;
+      border: 1px solid; border-color: #fff #404040 #404040 #fff; box-shadow: 2px 2px 0 #222;
+    }
+    .pt-dialog-title {
+      min-height: 24px; display: flex; align-items: center; gap: 8px; padding: 3px 6px;
+      background: #000080; color: #fff; font-size: 11px; font-weight: bold;
+    }
+    .pt-dialog-title span:first-child { flex: 1; }
+    .pt-dialog-close { min-height: 17px; height: 17px; width: 19px; min-width: 19px; padding: 0; font-size: 11px; }
+    .pt-dialog-body { padding: 13px 12px 11px; font-size: 11px; line-height: 1.5; }
+    .pt-dialog-body p { margin: 0 0 9px; }
+    .pt-dialog-id { margin: 0 0 10px; padding: 6px; border: 1px inset #888; background: #e5e5e5; overflow-wrap: anywhere; }
+    .pt-dialog-id strong { color: #000080; }
+    .pt-code-output {
+      display: block; width: 100%; margin: 8px 0; padding: 10px 6px; border: 1px inset #888;
+      background: #fff; color: #111; text-align: center; font: bold 14px/1.5 Consolas, "Courier New", monospace;
+      letter-spacing: .4px; overflow-wrap: anywhere; user-select: all;
+    }
+    .pt-dialog-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 12px; }
+    .pt-dialog-actions button { min-height: 24px; padding: 2px 9px; font-size: 10px; }
+    .pt-dialog-note { color: #444; font-size: 10px; }
     @media (max-width: 420px) {
       .room-gate { padding: 12px; }
       .room-shell { width: 100%; max-width: 390px; }
@@ -827,6 +913,10 @@
       .room-field { grid-template-columns: 68px minmax(0,1fr); gap: 6px; }
       .room-gate-message { margin-left: 74px; }
       .room-gate-actions button { min-width: 0; flex: 1; }
+      .room-recovery-fields label { grid-template-columns: 68px minmax(0,1fr); gap: 6px; }
+      .titlebar-room-label { max-width: 22vw; font-size: 8px; }
+      .titlebar-settings, .titlebar-lock { margin: 0 1px; padding: 1px 4px; font-size: 8px; }
+      .titlebar-lock { letter-spacing: -.2px; }
     }
 
 </style>
@@ -859,6 +949,19 @@
             </div>
           </form>
           <p class="room-gate-message" id="roomGateMessage" role="status" aria-live="polite"></p>
+          <button class="room-forgot-button" id="roomForgotButton" type="button">비밀번호 재설정</button>
+          <section class="room-recovery-panel" id="roomRecoveryPanel" hidden>
+            <h2 class="room-recovery-title">비밀번호 재설정</h2>
+            <div class="room-recovery-fields">
+              <label for="recoveryRoomId"><span>공간 ID</span><input id="recoveryRoomId" type="email" autocomplete="username" placeholder="이메일 형식 ID"></label>
+              <label for="recoveryCode"><span>복구 코드</span><input id="recoveryCode" type="text" autocomplete="off" placeholder="복구 코드 입력" autocapitalize="characters"></label>
+              <label for="recoveryNewPassword"><span>새 비밀번호</span><input id="recoveryNewPassword" type="password" autocomplete="new-password" placeholder="8자 이상" minlength="8"></label>
+            </div>
+            <div class="room-recovery-actions">
+              <button id="roomRecoveryCancel" type="button">취소</button>
+              <button id="roomRecoverySubmit" type="button">재설정</button>
+            </div>
+          </section>
         </section>
       </div>
     </div>
@@ -869,7 +972,8 @@
       <span class="titlebar-mark">✦</span>
       Prompt Toolbox
       <span class="titlebar-spacer"></span>
-      <span class="titlebar-room-label" id="activeRoomLabel"></span>
+      <span class="titlebar-room-label" id="activeRoomLabel" title=""></span>
+      <button class="titlebar-settings" id="openRoomSettings" type="button">설정</button>
       <button class="titlebar-lock" type="button" onclick="window.lockPromptRoom()">LOCK / CHANGE</button>
       <span class="window-controls" aria-hidden="true">
         <span class="window-control" style="display:grid;place-items:center;background:#c0c0c0;color:#111;border:1px solid white;border-right-color:#404040;border-bottom-color:#404040;font-weight:bold;">_</span>
@@ -1306,6 +1410,36 @@
     </main>
   </section>
 
+  <section class="pt-modal" id="roomSettingsModal" hidden role="dialog" aria-modal="true" aria-labelledby="roomSettingsTitle">
+    <div class="pt-dialog">
+      <header class="pt-dialog-title"><span id="roomSettingsTitle">Prompt Toolbox - 설정</span><button class="pt-dialog-close" id="closeRoomSettingsX" type="button" aria-label="닫기">×</button></header>
+      <div class="pt-dialog-body">
+        <div class="pt-dialog-id">공간 ID　<strong id="roomSettingsId"></strong></div>
+        <p><strong>복구 코드</strong><br>비밀번호를 잊었을 때 새 비밀번호를 설정하는 데 사용합니다.</p>
+        <p class="pt-dialog-note">복구 코드를 재발급하면 이전 코드는 즉시 사용할 수 없게 됩니다. 새 코드는 발급 직후에만 표시됩니다.</p>
+        <div class="pt-dialog-actions">
+          <button id="closeRoomSettings" type="button">닫기</button>
+          <button class="primary" id="reissueRecoveryCode" type="button">복구 코드 재발급</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pt-modal" id="recoveryCodeModal" hidden role="dialog" aria-modal="true" aria-labelledby="recoveryCodeTitle">
+    <div class="pt-dialog">
+      <header class="pt-dialog-title"><span id="recoveryCodeTitle">복구 코드</span></header>
+      <div class="pt-dialog-body">
+        <p>아래 코드를 안전한 곳에 보관해 주세요. 비밀번호를 잊었을 때 필요합니다.</p>
+        <code class="pt-code-output" id="recoveryCodeOutput"></code>
+        <p class="pt-dialog-note">이 코드는 지금만 표시됩니다. 복구 코드를 다시 바꾸면 이전 코드는 무효화됩니다.</p>
+        <div class="pt-dialog-actions">
+          <button id="copyRecoveryCode" type="button">코드 복사</button>
+          <button class="primary" id="closeRecoveryCode" type="button">확인</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <script>
 (() => {
   const ROOMS_KEY = 'promptToolbox.rooms.v28';
@@ -1323,6 +1457,11 @@
   const openButton = document.getElementById('roomOpenButton');
   const createButton = document.getElementById('roomCreateButton');
   const accessForm = document.getElementById('roomAccessForm');
+  const forgotButton = document.getElementById('roomForgotButton');
+  const recoveryPanel = document.getElementById('roomRecoveryPanel');
+  const settingsModal = document.getElementById('roomSettingsModal');
+  const codeModal = document.getElementById('recoveryCodeModal');
+  let lastRecoveryCode = '';
 
   function setMessage(text, success = false) {
     message.textContent = text;
@@ -1351,6 +1490,49 @@
     const bytes = crypto.getRandomValues(new Uint8Array(16));
     return btoa(String.fromCharCode(...bytes));
   }
+  function makeRecoveryCode() {
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const bytes = crypto.getRandomValues(new Uint8Array(20));
+    const compact = Array.from(bytes, value => alphabet[value % alphabet.length]).join('');
+    return compact.match(/.{1,5}/g).join('-');
+  }
+  function normalizeRecoveryCode(value) {
+    return String(value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  }
+  function saveRooms(rooms) {
+    localStorage.setItem(ROOMS_KEY, JSON.stringify(rooms));
+  }
+  async function issueRecoveryCode(roomKey) {
+    const rooms = readRooms();
+    const room = rooms[roomKey];
+    if (!room) throw new Error('공간을 찾을 수 없습니다.');
+    const code = makeRecoveryCode();
+    const salt = makeSalt();
+    room.recoverySalt = salt;
+    room.recoveryVerifier = await passwordVerifier(normalizeRecoveryCode(code), salt);
+    room.recoveryUpdatedAt = new Date().toISOString();
+    rooms[roomKey] = room;
+    saveRooms(rooms);
+    return code;
+  }
+  function showRecoveryCode(code, title = '복구 코드') {
+    lastRecoveryCode = code;
+    document.getElementById('recoveryCodeTitle').textContent = title;
+    document.getElementById('recoveryCodeOutput').textContent = code;
+    codeModal.hidden = false;
+    document.getElementById('closeRecoveryCode').focus();
+  }
+  function closeRecoveryCodeDialog() {
+    codeModal.hidden = true;
+    lastRecoveryCode = '';
+  }
+  function openSettings() {
+    const roomId = window.__ptRoomId || '';
+    document.getElementById('roomSettingsId').textContent = roomId;
+    settingsModal.hidden = false;
+    document.getElementById('closeRoomSettings').focus();
+  }
+  function closeSettings() { settingsModal.hidden = true; }
   function deleteDatabase(name) {
     return new Promise(resolve => {
       try {
@@ -1398,12 +1580,20 @@
     passwordInput.value = '';
     window.__ptRoomKey = roomKey;
     window.__ptRoomId = roomId;
-    document.getElementById('activeRoomLabel').textContent = roomId;
+    const roomLabel = document.getElementById('activeRoomLabel');
+    roomLabel.textContent = roomId;
+    roomLabel.title = roomId;
     gate.hidden = true;
     app.style.display = 'block';
     if (!window.__promptToolboxStarted) {
       window.__promptToolboxStarted = true;
       startPromptToolbox();
+    }
+    // Existing v29 rooms receive a recovery code on their first successful login after this update.
+    const currentRoom = readRooms()[roomKey];
+    if (currentRoom && (!currentRoom.recoverySalt || !currentRoom.recoveryVerifier)) {
+      const code = await issueRecoveryCode(roomKey);
+      showRecoveryCode(code, '복구 코드 발급 완료');
     }
   }
 
@@ -1453,6 +1643,54 @@
     }
   }
 
+  async function resetRoomPassword() {
+    const id = normalizeId(document.getElementById('recoveryRoomId').value);
+    const code = normalizeRecoveryCode(document.getElementById('recoveryCode').value);
+    const newPassword = document.getElementById('recoveryNewPassword').value;
+    if (!validId(id)) return setMessage('공간 ID를 이메일 형식으로 입력해주세요.');
+    if (code.length < 20) return setMessage('복구 코드를 확인해주세요.');
+    if (newPassword.length < 8) return setMessage('새 비밀번호는 8자 이상 입력해주세요.');
+    if (!crypto?.subtle) return setMessage('이 브라우저에서는 보안 기능을 사용할 수 없습니다. HTTPS 주소로 접속해주세요.');
+    const submit = document.getElementById('roomRecoverySubmit');
+    submit.disabled = true;
+    try {
+      const key = await hashId(id);
+      const rooms = readRooms();
+      const room = rooms[key];
+      if (!room || room.id !== id) return setMessage('해당 공간이 없습니다.');
+      if (!room.recoverySalt || !room.recoveryVerifier) return setMessage('이 공간에는 복구 코드가 아직 없습니다. 로그인 후 설정에서 발급해주세요.');
+      const verifier = await passwordVerifier(code, room.recoverySalt);
+      if (verifier !== room.recoveryVerifier) return setMessage('복구 코드가 맞지 않습니다.');
+
+      const passwordSalt = makeSalt();
+      room.salt = passwordSalt;
+      room.verifier = await passwordVerifier(newPassword, passwordSalt);
+      // A successful recovery consumes the old code and issues a replacement.
+      const nextCode = makeRecoveryCode();
+      const recoverySalt = makeSalt();
+      room.recoverySalt = recoverySalt;
+      room.recoveryVerifier = await passwordVerifier(normalizeRecoveryCode(nextCode), recoverySalt);
+      room.recoveryUpdatedAt = new Date().toISOString();
+      rooms[key] = room;
+      saveRooms(rooms);
+
+      idInput.value = id;
+      passwordInput.value = '';
+      recoveryPanel.hidden = true;
+      accessForm.hidden = false;
+      forgotButton.hidden = false;
+      setMessage('비밀번호를 변경했습니다. 새 비밀번호로 로그인해주세요.', true);
+      document.getElementById('recoveryRoomId').value = '';
+      document.getElementById('recoveryCode').value = '';
+      document.getElementById('recoveryNewPassword').value = '';
+      showRecoveryCode(nextCode, '새 복구 코드');
+    } catch (error) {
+      setMessage(`비밀번호를 변경하지 못했습니다: ${error.message || '다시 시도해주세요.'}`);
+    } finally {
+      submit.disabled = false;
+    }
+  }
+
   const cleanupReady = discardPreviousRoomData().then(() => true).catch(error => {
     console.error('Room reset could not be completed.', error);
     setMessage('이전 공간 데이터를 정리하지 못했습니다. 브라우저 저장소를 확인해주세요.');
@@ -1463,6 +1701,55 @@
   accessForm.addEventListener('submit', event => { event.preventDefault(); openRoom(); });
   passwordInput.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); openRoom(); } });
   idInput.addEventListener('keydown', event => { if (event.key === 'Enter') passwordInput.focus(); });
+  forgotButton.addEventListener('click', () => {
+    accessForm.hidden = true;
+    forgotButton.hidden = true;
+    recoveryPanel.hidden = false;
+    document.getElementById('recoveryRoomId').value = idInput.value;
+    document.getElementById('recoveryRoomId').focus();
+    setMessage('복구 코드와 새 비밀번호를 입력해주세요.');
+  });
+  document.getElementById('roomRecoveryCancel').addEventListener('click', () => {
+    recoveryPanel.hidden = true;
+    accessForm.hidden = false;
+    forgotButton.hidden = false;
+    setMessage('');
+  });
+  document.getElementById('roomRecoverySubmit').addEventListener('click', resetRoomPassword);
+  document.getElementById('openRoomSettings').addEventListener('click', openSettings);
+  document.getElementById('closeRoomSettings').addEventListener('click', closeSettings);
+  document.getElementById('closeRoomSettingsX').addEventListener('click', closeSettings);
+  document.getElementById('reissueRecoveryCode').addEventListener('click', async () => {
+    const button = document.getElementById('reissueRecoveryCode');
+    button.disabled = true;
+    try {
+      const code = await issueRecoveryCode(window.__ptRoomKey);
+      closeSettings();
+      showRecoveryCode(code, '새 복구 코드');
+    } catch (error) {
+      alert(error.message || '복구 코드를 발급하지 못했습니다.');
+    } finally { button.disabled = false; }
+  });
+  document.getElementById('closeRecoveryCode').addEventListener('click', closeRecoveryCodeDialog);
+  document.getElementById('copyRecoveryCode').addEventListener('click', async () => {
+    if (!lastRecoveryCode) return;
+    const button = document.getElementById('copyRecoveryCode');
+    try {
+      await navigator.clipboard.writeText(lastRecoveryCode);
+      button.textContent = '복사 완료';
+    } catch (_) {
+      const code = document.getElementById('recoveryCodeOutput');
+      const range = document.createRange();
+      range.selectNodeContents(code);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      button.textContent = '선택됨 · 복사';
+    }
+  });
+  [settingsModal, codeModal].forEach(modal => modal.addEventListener('click', event => {
+    if (event.target === modal && modal === settingsModal) closeSettings();
+  }));
   window.lockPromptRoom = () => window.location.reload();
 })();
 </script>
