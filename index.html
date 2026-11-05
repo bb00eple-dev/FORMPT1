@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#c0c0c0">
-  <title>Prompt Toolbox v28 | Room Desk</title>
+  <title>Prompt Toolbox v29 | Login</title>
   <style>
     :root {
       color-scheme: light;
@@ -668,7 +668,7 @@
 
 
 
-    /* v28 room desk: an entrance screen that belongs to the existing retro desktop UI */
+    /* v29: compact classic Windows room login */
     .room-gate {
       position: fixed;
       inset: 0;
@@ -676,240 +676,189 @@
       display: grid;
       place-items: center;
       overflow: auto;
-      padding: 26px 18px;
-      background-color: #087b78;
-      background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
-      background-size: 24px 24px;
-      color: #171717;
+      padding: 18px;
+      background: #008080;
+      color: #111;
+      font-family: Tahoma, Arial, sans-serif;
     }
     .room-gate[hidden] { display: none !important; }
     .room-shell {
-      width: min(100%, 940px);
-      padding: 4px;
+      width: min(100%, 390px);
+      padding: 3px;
       background: #c0c0c0;
-      border-top: 2px solid #fff;
-      border-left: 2px solid #fff;
-      border-right: 2px solid #404040;
-      border-bottom: 2px solid #404040;
-      box-shadow: 5px 6px 0 rgba(0,0,0,.24), 0 22px 60px rgba(0,0,0,.18);
+      border: 1px solid;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: 1px 1px 0 #000;
     }
     .room-gate-bar {
-      min-height: 34px;
-      padding: 6px 9px;
+      height: 25px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      padding: 3px 5px;
       color: #fff;
       background: #000080;
       font-size: 12px;
       font-weight: bold;
-      letter-spacing: .35px;
+      line-height: 1;
     }
-    .room-gate-mark {
-      width: 18px;
-      height: 18px;
-      display: grid;
-      place-items: center;
-      color: #000080;
-      background: #f2d98d;
-      border: 1px solid #fff;
-      font-size: 12px;
-    }
+    .room-gate-mark { display: none; }
     .room-bar-spacer { flex: 1; }
-    .room-bar-meta { color: #d9d9ef; font-size: 9px; font-weight: normal; letter-spacing: 1px; }
-    .room-bar-meta b { margin-left: 5px; padding: 2px 4px; color: #000080; background: #f1d98d; font-size: 9px; }
-    .room-bar-lights { display: flex; gap: 3px; margin-left: 10px; }
-    .room-bar-lights i { width: 7px; height: 7px; border: 1px solid rgba(255,255,255,.8); background: #8292c8; }
-    .room-gate-layout { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); min-height: 540px; }
-    .room-showcase {
+    .room-bar-meta, .room-bar-lights { display: none; }
+    .room-gate-controls { display: flex; gap: 2px; }
+    .room-gate-controls i {
       position: relative;
+      display: block;
+      width: 16px;
+      height: 14px;
+      background: #c0c0c0;
+      border: 1px solid;
+      border-color: #fff #404040 #404040 #fff;
+    }
+    .room-gate-controls i:first-child::after {
+      content: "";
+      position: absolute;
+      left: 4px; right: 4px; bottom: 3px;
+      border-top: 1px solid #111;
+    }
+    .room-gate-controls i:nth-child(2)::after {
+      content: "";
+      position: absolute;
+      inset: 3px 4px 3px;
+      border: 1px solid #111;
+      border-top-width: 2px;
+    }
+    .room-gate-controls i:last-child::before,
+    .room-gate-controls i:last-child::after {
+      content: "";
+      position: absolute;
+      left: 3px; right: 3px; top: 6px;
+      border-top: 1px solid #111;
+      transform: rotate(45deg);
+    }
+    .room-gate-controls i:last-child::after { transform: rotate(-45deg); }
+    .room-gate-layout { display: block; min-height: 0; }
+    .room-showcase { display: none; }
+    .room-access-panel {
+      padding: 22px 22px 18px;
+      background: #c0c0c0;
+    }
+    .room-access-topline { display: none; }
+    .room-access-heading { margin: 0 0 18px; }
+    .room-kicker { display: none; }
+    .room-access-heading h1 {
+      margin: 0;
+      color: #111;
+      font-size: 15px;
+      line-height: 1.4;
+      font-weight: bold;
+    }
+    .room-access-heading h1 em { font-style: normal; }
+    .room-intro { display: none; }
+    .room-form-rule { display: none; }
+    .room-form { display: grid; gap: 12px; }
+    .room-field { display: grid; grid-template-columns: 76px minmax(0,1fr); align-items: center; gap: 8px; }
+    .room-field-label {
+      color: #111;
+      font-size: 12px;
+      font-weight: normal;
+    }
+    .room-field-label small { display: none; }
+    .room-input-wrap { display: block; min-width: 0; }
+    .room-input-icon { display: none; }
+    .room-input-wrap input {
+      box-sizing: border-box;
+      width: 100%;
+      height: 25px;
+      padding: 3px 6px;
+      border: 1px solid;
+      border-color: #404040 #fff #fff #404040;
+      border-radius: 0;
+      outline: none;
+      background: #fff;
+      color: #111;
+      font: 12px Tahoma, Arial, sans-serif;
+      box-shadow: inset 1px 1px 0 #808080;
+    }
+    .room-input-wrap input:focus { outline: 1px dotted #111; outline-offset: -4px; }
+    .room-input-wrap input::placeholder { color: #777; }
+    .room-gate-actions {
       display: flex;
-      flex-direction: column;
-      min-width: 0;
-      overflow: hidden;
-      padding: 29px 34px 22px;
-      color: #f7f3e9;
-      background: #20265f;
-      isolation: isolate;
+      justify-content: flex-end;
+      gap: 7px;
+      margin-top: 7px;
     }
-    .room-showcase::before, .room-showcase::after { position: absolute; z-index: -1; content: ""; pointer-events: none; }
-    .room-showcase::before { width: 300px; height: 300px; right: -135px; top: 115px; border: 1px solid rgba(255,255,255,.13); border-radius: 50%; box-shadow: 0 0 0 24px rgba(255,255,255,.025), 0 0 0 49px rgba(255,255,255,.025), 0 0 0 76px rgba(255,255,255,.02); }
-    .room-showcase::after { width: 230px; height: 230px; left: -150px; bottom: -130px; border: 1px solid rgba(255,255,255,.12); transform: rotate(35deg); }
-    .room-showcase-top, .room-showcase-footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-    .room-edition { color: #c6c8df; font: 9px/1.2 Consolas, monospace; letter-spacing: 1.45px; }
-    .room-edition-mark { padding: 4px 6px; border: 1px solid rgba(255,255,255,.35); color: #f1d98d; font: 9px Consolas, monospace; }
-    .room-showcase-brand { display: flex; align-items: center; gap: 14px; margin-top: 52px; }
-    .room-monogram { width: 52px; height: 52px; display: grid; place-items: center; border: 1px solid #f1d98d; color: #f1d98d; font: italic bold 30px Georgia, serif; transform: rotate(-5deg); }
-    .room-monogram span { color: #fff; }
-    .room-brand-wordmark { color: #fff; font: 700 19px/1.03 Tahoma, Arial, sans-serif; letter-spacing: 1.4px; }
-    .room-brand-wordmark i { color: #f1d98d; font-family: Georgia, serif; font-weight: normal; letter-spacing: 2.1px; }
-    .room-showcase-copy { margin: 28px 0 21px; color: #f6f0de; font: 26px/1.13 Georgia, serif; letter-spacing: .6px; }
-    .room-preview-window { width: 100%; max-width: 330px; margin: auto 0 24px; padding: 3px; background: #c0c0c0; border-top: 2px solid #fff; border-left: 2px solid #fff; border-right: 2px solid #555; border-bottom: 2px solid #555; box-shadow: 8px 9px 0 rgba(0,0,0,.16); transform: rotate(-1.2deg); }
-    .room-preview-title { min-height: 23px; padding: 4px 6px; display: flex; align-items: center; gap: 6px; color: #fff; background: #000080; font-size: 9px; font-weight: bold; letter-spacing: .55px; }
-    .room-preview-title > span:first-child { color: #f1d98d; }
-    .room-preview-dots { margin-left: auto; color: #fff; letter-spacing: 4px; }
-    .room-preview-content { min-height: 112px; display: grid; grid-template-columns: 48px 1fr; gap: 7px; padding: 8px; background: #e8e6dc; }
-    .room-preview-sidebar { display: flex; flex-direction: column; gap: 7px; padding: 7px 5px; background: #d0cec4; border: 1px solid #aaa79e; }
-    .room-preview-sidebar i { height: 5px; background: #777f9f; opacity: .8; }
-    .room-preview-sidebar i:nth-child(2) { width: 76%; background: #b79d5e; }
-    .room-preview-sidebar i:nth-child(3) { width: 88%; }
-    .room-preview-main { min-width: 0; padding: 4px 2px; }
-    .room-preview-heading { width: 46%; height: 7px; margin-bottom: 9px; background: #343b75; }
-    .room-preview-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
-    .room-preview-tiles i { height: 39px; border: 1px solid #aaa79e; background: linear-gradient(145deg,#d8cba7,#f4f0e4); }
-    .room-preview-tiles i:nth-child(2) { background: linear-gradient(145deg,#9ba4ad,#e5e3d9); }
-    .room-preview-tiles i:nth-child(3) { background: linear-gradient(145deg,#b7a05a,#eee2bd); }
-    .room-preview-lines { display: flex; gap: 5px; margin-top: 8px; }
-    .room-preview-lines i { width: 31%; height: 3px; background: #aaa79e; }
-    .room-preview-foot { display: flex; justify-content: space-between; padding: 5px 7px 3px; color: #555; font: 8px Consolas, monospace; letter-spacing: 1px; }
-    .room-showcase-footer { color: #c4c5da; font: 8px Consolas, monospace; letter-spacing: 1px; }
-    .room-showcase-footer span:last-child { color: #f1d98d; font-size: 14px; }
-    .room-showcase-orbit { position: absolute; color: rgba(241,217,141,.7); pointer-events: none; }
-    .orbit-one { top: 185px; right: 35px; font-size: 27px; }
-    .orbit-two { right: 65px; bottom: 85px; font-size: 18px; }
-
-    .room-access-panel { display: flex; flex-direction: column; min-width: 0; padding: 25px 34px 18px; background: #e7e5dc; }
-    .room-access-topline { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-bottom: 13px; border-bottom: 1px solid #c2c0b7; color: #565656; font: 9px Consolas, monospace; letter-spacing: 1.15px; }
-    .room-access-topline > span:last-child { display: flex; align-items: center; gap: 6px; color: #46735f; }
-    .room-online-dot { width: 6px; height: 6px; display: inline-block; border-radius: 50%; background: #6e9c74; box-shadow: 0 0 0 3px rgba(110,156,116,.13); }
-    .room-access-heading { margin: 33px 0 25px; }
-    .room-kicker { margin: 0 0 10px; color: #77715f; font: 9px Consolas, monospace; letter-spacing: 1.6px; }
-    .room-access-heading h1 { margin: 0; color: #242b65; font: 700 clamp(27px, 3vw, 35px)/1.18 Tahoma, Arial, sans-serif; letter-spacing: -1.7px; }
-    .room-access-heading h1 em { color: #8d7541; font-family: Georgia, serif; font-weight: normal; letter-spacing: -.7px; }
-    .room-intro { margin: 13px 0 0; color: #66645e; font-size: 11px; line-height: 1.7; }
-    .room-form-rule { display: flex; align-items: center; gap: 11px; margin-bottom: 15px; color: #68665e; font: 9px Consolas, monospace; letter-spacing: 1.2px; }
-    .room-form-rule i { height: 1px; flex: 1; background: #c2c0b7; }
-    .room-form { display: grid; gap: 13px; }
-    .room-field { display: grid; gap: 6px; min-width: 0; }
-    .room-field-label { display: flex; align-items: baseline; gap: 8px; color: #343434; font-size: 11px; font-weight: bold; }
-    .room-field-label small { color: #99958a; font: 8px Consolas, monospace; letter-spacing: 1px; }
-    .room-input-wrap { display: flex; align-items: center; min-width: 0; height: 39px; background: #fbfaf6; border: 1px solid #aaa79c; border-top-color: #76746d; border-left-color: #76746d; box-shadow: inset 1px 1px 2px rgba(0,0,0,.08); }
-    .room-input-icon { width: 36px; flex: 0 0 36px; display: grid; place-items: center; color: #7c704e; font-size: 16px; border-right: 1px solid #d2d0c7; }
-    .room-input-wrap input { width: 100%; min-width: 0; height: 100%; padding: 0 10px; border: 0; outline: 0; background: transparent; color: #222; font-size: 12px; }
-    .room-input-wrap:focus-within { outline: 2px solid rgba(0,0,128,.23); border-color: #333b7d; }
-    .room-input-wrap input::placeholder { color: #aaa79e; }
-    .room-gate-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 7px; }
-    .room-open-button, .room-create-button { min-height: 42px; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 8px 10px; cursor: pointer; font-size: 11px; font-weight: bold; }
-    .room-open-button { color: white; background: #252b69; border: 1px solid #10164e; box-shadow: inset 1px 1px 0 rgba(255,255,255,.25), 2px 2px 0 #b8b5a9; }
-    .room-open-button:hover { background: #343d83; }
-    .room-open-button:active { transform: translate(1px,1px); box-shadow: none; }
-    .room-open-button b { color: #f1d98d; font-size: 15px; }
-    .room-create-button { color: #343434; background: #dedcd2; border: 1px solid #8d8b83; border-top-color: #fff; border-left-color: #fff; box-shadow: 1px 1px 0 #aaa79d; }
-    .room-create-button:hover { background: #eeece4; }
-    .room-create-plus { color: #8d7541; font-size: 16px; line-height: 10px; }
+    .room-gate-actions button {
+      min-width: 104px;
+      height: 27px;
+      padding: 3px 10px;
+      border: 1px solid;
+      border-color: #fff #404040 #404040 #fff;
+      border-radius: 0;
+      background: #c0c0c0;
+      color: #111;
+      font: 12px Tahoma, Arial, sans-serif;
+      box-shadow: 1px 1px 0 #111;
+      cursor: default;
+    }
+    .room-gate-actions button:active {
+      padding: 4px 9px 2px 11px;
+      border-color: #404040 #fff #fff #404040;
+      box-shadow: none;
+    }
+    .room-gate-actions button:focus { outline: 1px dotted #111; outline-offset: -4px; }
+    .room-open-button { font-weight: bold !important; }
+    .room-open-button span { display: inline; }
+    .room-open-button b, .room-create-plus { display: none; }
     .room-gate-actions button:disabled { opacity: .55; cursor: wait; }
-    .room-gate-message { min-height: 17px; margin: 9px 0 3px; color: #9a3d35; font-size: 10px; line-height: 1.5; }
-    .room-gate-message.success { color: #3e704f; }
-    .room-local-note { display: flex; align-items: flex-start; gap: 9px; margin-top: auto; padding: 10px 11px; border: 1px solid #d1cec2; background: #dedcd2; }
-    .room-note-lock { width: 22px; height: 22px; flex: 0 0 22px; display: grid; place-items: center; color: #706039; border: 1px solid #c1b99f; background: #eee9d9; font-size: 11px; }
-    .room-local-note p { margin: 0; color: #77746a; font-size: 9px; line-height: 1.5; }
-    .room-local-note b { color: #4d4a42; font: bold 8px Consolas, monospace; letter-spacing: 1px; }
-    .room-access-footer { display: flex; justify-content: space-between; gap: 8px; margin-top: 15px; color: #99968b; font: 8px Consolas, monospace; letter-spacing: .55px; }
-
-    @media (max-width: 720px) {
-      .room-gate { padding: 12px 9px; place-items: start center; }
-      .room-gate-layout { grid-template-columns: 1fr; min-height: 0; }
-      .room-showcase { min-height: 245px; padding: 20px 22px 16px; }
-      .room-showcase-brand { margin-top: 25px; }
-      .room-monogram { width: 43px; height: 43px; font-size: 25px; }
-      .room-brand-wordmark { font-size: 16px; }
-      .room-showcase-copy { margin: 16px 0 14px; font-size: 22px; }
-      .room-preview-window { position: absolute; right: 23px; bottom: 32px; width: 43%; max-width: 220px; margin: 0; }
-      .room-preview-content { min-height: 73px; grid-template-columns: 31px 1fr; gap: 4px; padding: 5px; }
-      .room-preview-sidebar { gap: 5px; padding: 5px 3px; }
-      .room-preview-tiles i { height: 24px; }
-      .room-preview-heading { margin-bottom: 5px; }
-      .room-preview-lines { margin-top: 5px; }
-      .room-preview-title { min-height: 19px; font-size: 7px; }
-      .room-preview-foot { font-size: 6px; }
-      .room-showcase-footer { max-width: 50%; font-size: 7px; }
-      .orbit-one { top: 45px; right: 24px; font-size: 20px; }
-      .orbit-two { display: none; }
-      .room-access-panel { padding: 21px 22px 16px; }
-      .room-access-heading { margin: 24px 0 21px; }
-      .room-access-heading h1 { font-size: 29px; }
+    .room-gate-message {
+      min-height: 16px;
+      margin: 12px 0 0 84px;
+      color: #9a1717;
+      font-size: 11px;
+      line-height: 1.4;
     }
-    @media (max-width: 390px) {
-      .room-gate-actions { grid-template-columns: 1fr; }
-      .room-preview-window { right: 16px; width: 40%; }
-      .room-showcase { min-height: 225px; }
-      .room-access-footer { flex-direction: column; }
-      .room-bar-meta { font-size: 8px; }
+    .room-gate-message.success { color: #176b2c; }
+    .room-local-note, .room-access-footer { display: none; }
+    @media (max-width: 420px) {
+      .room-gate { padding: 12px; }
+      .room-shell { width: 100%; max-width: 390px; }
+      .room-access-panel { padding: 20px 16px 15px; }
+      .room-field { grid-template-columns: 68px minmax(0,1fr); gap: 6px; }
+      .room-gate-message { margin-left: 74px; }
+      .room-gate-actions button { min-width: 0; flex: 1; }
     }
 
 </style>
 </head>
 <body>
-  <section class="room-gate" id="roomGate" aria-label="Prompt Toolbox room access">
+  <section class="room-gate" id="roomGate" aria-label="Prompt Toolbox login">
     <div class="room-shell">
       <header class="room-gate-bar">
-        <span class="room-gate-mark">✦</span>
-        <span>PROMPT TOOLBOX</span>
+        <span>Prompt Toolbox - 로그인</span>
         <span class="room-bar-spacer"></span>
-        <span class="room-bar-meta">ROOM DESK <b>28.0</b></span>
-        <span class="room-bar-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="room-gate-controls" aria-hidden="true"><i></i><i></i><i></i></span>
       </header>
-
       <div class="room-gate-layout">
-        <aside class="room-showcase">
-          <div class="room-showcase-top">
-            <span class="room-edition">PERSONAL WORKSPACE / 2026</span>
-            <span class="room-edition-mark">PT—28</span>
-          </div>
-          <div class="room-showcase-brand">
-            <div class="room-monogram">P<span>.</span></div>
-            <div class="room-brand-wordmark">PROMPT<br><i>TOOLBOX</i></div>
-          </div>
-          <p class="room-showcase-copy">A LITTLE PLACE<br>FOR BIG IDEAS.</p>
-          <div class="room-preview-window" aria-hidden="true">
-            <div class="room-preview-title"><span>✦</span> MY WORKSPACE <span class="room-preview-dots">_ □ ×</span></div>
-            <div class="room-preview-content">
-              <div class="room-preview-sidebar"><i></i><i></i><i></i><i></i></div>
-              <div class="room-preview-main">
-                <div class="room-preview-heading"></div>
-                <div class="room-preview-tiles"><i></i><i></i><i></i></div>
-                <div class="room-preview-lines"><i></i><i></i><i></i></div>
-              </div>
-            </div>
-            <div class="room-preview-foot"><span>CREATE</span><span>COLLECT</span><span>KEEP</span></div>
-          </div>
-          <div class="room-showcase-footer">
-            <span>YOUR PROMPTS, YOUR RULES.</span>
-            <span>♡</span>
-          </div>
-          <span class="room-showcase-orbit orbit-one" aria-hidden="true">✳</span>
-          <span class="room-showcase-orbit orbit-two" aria-hidden="true">✦</span>
-        </aside>
-
         <section class="room-access-panel">
-          <div class="room-access-topline">
-            <span>ROOM ACCESS</span>
-            <span><i class="room-online-dot"></i> LOCAL MODE</span>
-          </div>
           <div class="room-access-heading">
-            <p class="room-kicker">WELCOME TO YOUR DESK</p>
-            <h1>어느 공간으로<br><em>들어갈까요?</em></h1>
-            <p class="room-intro">공간 ID와 비밀번호를 입력해 작업실을 열거나,<br class="desktop-break"> 새로운 공간을 만들어보세요.</p>
+            <h1>공간에 로그인</h1>
           </div>
-
-          <div class="room-form-rule"><span>ENTER YOUR SPACE</span><i></i></div>
           <form class="room-form" id="roomAccessForm" novalidate>
             <label class="room-field" for="roomId">
-              <span class="room-field-label">공간 ID <small>SPACE ID</small></span>
-              <span class="room-input-wrap"><span class="room-input-icon">＠</span><input id="roomId" type="email" inputmode="email" autocomplete="username" placeholder="name@example.com"></span>
+              <span class="room-field-label">공간 ID</span>
+              <span class="room-input-wrap"><input id="roomId" type="email" inputmode="email" autocomplete="username" placeholder="이메일 형식 ID"></span>
             </label>
             <label class="room-field" for="roomPassword">
-              <span class="room-field-label">비밀번호 <small>PASSWORD</small></span>
-              <span class="room-input-wrap"><span class="room-input-icon">⌑</span><input id="roomPassword" type="password" autocomplete="current-password" placeholder="8자 이상 입력" minlength="8"></span>
+              <span class="room-field-label">비밀번호</span>
+              <span class="room-input-wrap"><input id="roomPassword" type="password" autocomplete="current-password" placeholder="8자 이상" minlength="8"></span>
             </label>
             <div class="room-gate-actions">
-              <button class="room-open-button" id="roomOpenButton" type="button"><span>공간 열기</span><b>↗</b></button>
-              <button class="room-create-button" id="roomCreateButton" type="button"><span class="room-create-plus">＋</span> 새 공간 만들기</button>
+              <button class="room-open-button" id="roomOpenButton" type="button"><span>로그인</span></button>
+              <button class="room-create-button" id="roomCreateButton" type="button">새 공간 만들기</button>
             </div>
           </form>
           <p class="room-gate-message" id="roomGateMessage" role="status" aria-live="polite"></p>
-          <div class="room-local-note"><span class="room-note-lock">▣</span><p><b>THIS DEVICE ONLY</b><br>공간과 자료는 현재 브라우저에 저장됩니다. 실제 이메일 인증이나 다른 기기와의 자동 동기화는 없습니다.</p></div>
-          <footer class="room-access-footer"><span>© PROMPT TOOLBOX</span><span>MADE FOR YOUR IMAGINATION　✦</span></footer>
         </section>
       </div>
     </div>
