@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#c0c0c0">
-  <title>Prompt Toolbox v27 | Rooms</title>
+  <title>Prompt Toolbox v28 | Room Desk</title>
   <style>
     :root {
       color-scheme: light;
@@ -666,23 +666,252 @@
       .outfit-exclude-list { grid-template-columns: 1fr; }
     }
 
+
+
+    /* v28 room desk: an entrance screen that belongs to the existing retro desktop UI */
+    .room-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      overflow: auto;
+      padding: 26px 18px;
+      background-color: #087b78;
+      background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: #171717;
+    }
+    .room-gate[hidden] { display: none !important; }
+    .room-shell {
+      width: min(100%, 940px);
+      padding: 4px;
+      background: #c0c0c0;
+      border-top: 2px solid #fff;
+      border-left: 2px solid #fff;
+      border-right: 2px solid #404040;
+      border-bottom: 2px solid #404040;
+      box-shadow: 5px 6px 0 rgba(0,0,0,.24), 0 22px 60px rgba(0,0,0,.18);
+    }
+    .room-gate-bar {
+      min-height: 34px;
+      padding: 6px 9px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      background: #000080;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: .35px;
+    }
+    .room-gate-mark {
+      width: 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      color: #000080;
+      background: #f2d98d;
+      border: 1px solid #fff;
+      font-size: 12px;
+    }
+    .room-bar-spacer { flex: 1; }
+    .room-bar-meta { color: #d9d9ef; font-size: 9px; font-weight: normal; letter-spacing: 1px; }
+    .room-bar-meta b { margin-left: 5px; padding: 2px 4px; color: #000080; background: #f1d98d; font-size: 9px; }
+    .room-bar-lights { display: flex; gap: 3px; margin-left: 10px; }
+    .room-bar-lights i { width: 7px; height: 7px; border: 1px solid rgba(255,255,255,.8); background: #8292c8; }
+    .room-gate-layout { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); min-height: 540px; }
+    .room-showcase {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+      padding: 29px 34px 22px;
+      color: #f7f3e9;
+      background: #20265f;
+      isolation: isolate;
+    }
+    .room-showcase::before, .room-showcase::after { position: absolute; z-index: -1; content: ""; pointer-events: none; }
+    .room-showcase::before { width: 300px; height: 300px; right: -135px; top: 115px; border: 1px solid rgba(255,255,255,.13); border-radius: 50%; box-shadow: 0 0 0 24px rgba(255,255,255,.025), 0 0 0 49px rgba(255,255,255,.025), 0 0 0 76px rgba(255,255,255,.02); }
+    .room-showcase::after { width: 230px; height: 230px; left: -150px; bottom: -130px; border: 1px solid rgba(255,255,255,.12); transform: rotate(35deg); }
+    .room-showcase-top, .room-showcase-footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .room-edition { color: #c6c8df; font: 9px/1.2 Consolas, monospace; letter-spacing: 1.45px; }
+    .room-edition-mark { padding: 4px 6px; border: 1px solid rgba(255,255,255,.35); color: #f1d98d; font: 9px Consolas, monospace; }
+    .room-showcase-brand { display: flex; align-items: center; gap: 14px; margin-top: 52px; }
+    .room-monogram { width: 52px; height: 52px; display: grid; place-items: center; border: 1px solid #f1d98d; color: #f1d98d; font: italic bold 30px Georgia, serif; transform: rotate(-5deg); }
+    .room-monogram span { color: #fff; }
+    .room-brand-wordmark { color: #fff; font: 700 19px/1.03 Tahoma, Arial, sans-serif; letter-spacing: 1.4px; }
+    .room-brand-wordmark i { color: #f1d98d; font-family: Georgia, serif; font-weight: normal; letter-spacing: 2.1px; }
+    .room-showcase-copy { margin: 28px 0 21px; color: #f6f0de; font: 26px/1.13 Georgia, serif; letter-spacing: .6px; }
+    .room-preview-window { width: 100%; max-width: 330px; margin: auto 0 24px; padding: 3px; background: #c0c0c0; border-top: 2px solid #fff; border-left: 2px solid #fff; border-right: 2px solid #555; border-bottom: 2px solid #555; box-shadow: 8px 9px 0 rgba(0,0,0,.16); transform: rotate(-1.2deg); }
+    .room-preview-title { min-height: 23px; padding: 4px 6px; display: flex; align-items: center; gap: 6px; color: #fff; background: #000080; font-size: 9px; font-weight: bold; letter-spacing: .55px; }
+    .room-preview-title > span:first-child { color: #f1d98d; }
+    .room-preview-dots { margin-left: auto; color: #fff; letter-spacing: 4px; }
+    .room-preview-content { min-height: 112px; display: grid; grid-template-columns: 48px 1fr; gap: 7px; padding: 8px; background: #e8e6dc; }
+    .room-preview-sidebar { display: flex; flex-direction: column; gap: 7px; padding: 7px 5px; background: #d0cec4; border: 1px solid #aaa79e; }
+    .room-preview-sidebar i { height: 5px; background: #777f9f; opacity: .8; }
+    .room-preview-sidebar i:nth-child(2) { width: 76%; background: #b79d5e; }
+    .room-preview-sidebar i:nth-child(3) { width: 88%; }
+    .room-preview-main { min-width: 0; padding: 4px 2px; }
+    .room-preview-heading { width: 46%; height: 7px; margin-bottom: 9px; background: #343b75; }
+    .room-preview-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+    .room-preview-tiles i { height: 39px; border: 1px solid #aaa79e; background: linear-gradient(145deg,#d8cba7,#f4f0e4); }
+    .room-preview-tiles i:nth-child(2) { background: linear-gradient(145deg,#9ba4ad,#e5e3d9); }
+    .room-preview-tiles i:nth-child(3) { background: linear-gradient(145deg,#b7a05a,#eee2bd); }
+    .room-preview-lines { display: flex; gap: 5px; margin-top: 8px; }
+    .room-preview-lines i { width: 31%; height: 3px; background: #aaa79e; }
+    .room-preview-foot { display: flex; justify-content: space-between; padding: 5px 7px 3px; color: #555; font: 8px Consolas, monospace; letter-spacing: 1px; }
+    .room-showcase-footer { color: #c4c5da; font: 8px Consolas, monospace; letter-spacing: 1px; }
+    .room-showcase-footer span:last-child { color: #f1d98d; font-size: 14px; }
+    .room-showcase-orbit { position: absolute; color: rgba(241,217,141,.7); pointer-events: none; }
+    .orbit-one { top: 185px; right: 35px; font-size: 27px; }
+    .orbit-two { right: 65px; bottom: 85px; font-size: 18px; }
+
+    .room-access-panel { display: flex; flex-direction: column; min-width: 0; padding: 25px 34px 18px; background: #e7e5dc; }
+    .room-access-topline { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-bottom: 13px; border-bottom: 1px solid #c2c0b7; color: #565656; font: 9px Consolas, monospace; letter-spacing: 1.15px; }
+    .room-access-topline > span:last-child { display: flex; align-items: center; gap: 6px; color: #46735f; }
+    .room-online-dot { width: 6px; height: 6px; display: inline-block; border-radius: 50%; background: #6e9c74; box-shadow: 0 0 0 3px rgba(110,156,116,.13); }
+    .room-access-heading { margin: 33px 0 25px; }
+    .room-kicker { margin: 0 0 10px; color: #77715f; font: 9px Consolas, monospace; letter-spacing: 1.6px; }
+    .room-access-heading h1 { margin: 0; color: #242b65; font: 700 clamp(27px, 3vw, 35px)/1.18 Tahoma, Arial, sans-serif; letter-spacing: -1.7px; }
+    .room-access-heading h1 em { color: #8d7541; font-family: Georgia, serif; font-weight: normal; letter-spacing: -.7px; }
+    .room-intro { margin: 13px 0 0; color: #66645e; font-size: 11px; line-height: 1.7; }
+    .room-form-rule { display: flex; align-items: center; gap: 11px; margin-bottom: 15px; color: #68665e; font: 9px Consolas, monospace; letter-spacing: 1.2px; }
+    .room-form-rule i { height: 1px; flex: 1; background: #c2c0b7; }
+    .room-form { display: grid; gap: 13px; }
+    .room-field { display: grid; gap: 6px; min-width: 0; }
+    .room-field-label { display: flex; align-items: baseline; gap: 8px; color: #343434; font-size: 11px; font-weight: bold; }
+    .room-field-label small { color: #99958a; font: 8px Consolas, monospace; letter-spacing: 1px; }
+    .room-input-wrap { display: flex; align-items: center; min-width: 0; height: 39px; background: #fbfaf6; border: 1px solid #aaa79c; border-top-color: #76746d; border-left-color: #76746d; box-shadow: inset 1px 1px 2px rgba(0,0,0,.08); }
+    .room-input-icon { width: 36px; flex: 0 0 36px; display: grid; place-items: center; color: #7c704e; font-size: 16px; border-right: 1px solid #d2d0c7; }
+    .room-input-wrap input { width: 100%; min-width: 0; height: 100%; padding: 0 10px; border: 0; outline: 0; background: transparent; color: #222; font-size: 12px; }
+    .room-input-wrap:focus-within { outline: 2px solid rgba(0,0,128,.23); border-color: #333b7d; }
+    .room-input-wrap input::placeholder { color: #aaa79e; }
+    .room-gate-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 7px; }
+    .room-open-button, .room-create-button { min-height: 42px; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 8px 10px; cursor: pointer; font-size: 11px; font-weight: bold; }
+    .room-open-button { color: white; background: #252b69; border: 1px solid #10164e; box-shadow: inset 1px 1px 0 rgba(255,255,255,.25), 2px 2px 0 #b8b5a9; }
+    .room-open-button:hover { background: #343d83; }
+    .room-open-button:active { transform: translate(1px,1px); box-shadow: none; }
+    .room-open-button b { color: #f1d98d; font-size: 15px; }
+    .room-create-button { color: #343434; background: #dedcd2; border: 1px solid #8d8b83; border-top-color: #fff; border-left-color: #fff; box-shadow: 1px 1px 0 #aaa79d; }
+    .room-create-button:hover { background: #eeece4; }
+    .room-create-plus { color: #8d7541; font-size: 16px; line-height: 10px; }
+    .room-gate-actions button:disabled { opacity: .55; cursor: wait; }
+    .room-gate-message { min-height: 17px; margin: 9px 0 3px; color: #9a3d35; font-size: 10px; line-height: 1.5; }
+    .room-gate-message.success { color: #3e704f; }
+    .room-local-note { display: flex; align-items: flex-start; gap: 9px; margin-top: auto; padding: 10px 11px; border: 1px solid #d1cec2; background: #dedcd2; }
+    .room-note-lock { width: 22px; height: 22px; flex: 0 0 22px; display: grid; place-items: center; color: #706039; border: 1px solid #c1b99f; background: #eee9d9; font-size: 11px; }
+    .room-local-note p { margin: 0; color: #77746a; font-size: 9px; line-height: 1.5; }
+    .room-local-note b { color: #4d4a42; font: bold 8px Consolas, monospace; letter-spacing: 1px; }
+    .room-access-footer { display: flex; justify-content: space-between; gap: 8px; margin-top: 15px; color: #99968b; font: 8px Consolas, monospace; letter-spacing: .55px; }
+
+    @media (max-width: 720px) {
+      .room-gate { padding: 12px 9px; place-items: start center; }
+      .room-gate-layout { grid-template-columns: 1fr; min-height: 0; }
+      .room-showcase { min-height: 245px; padding: 20px 22px 16px; }
+      .room-showcase-brand { margin-top: 25px; }
+      .room-monogram { width: 43px; height: 43px; font-size: 25px; }
+      .room-brand-wordmark { font-size: 16px; }
+      .room-showcase-copy { margin: 16px 0 14px; font-size: 22px; }
+      .room-preview-window { position: absolute; right: 23px; bottom: 32px; width: 43%; max-width: 220px; margin: 0; }
+      .room-preview-content { min-height: 73px; grid-template-columns: 31px 1fr; gap: 4px; padding: 5px; }
+      .room-preview-sidebar { gap: 5px; padding: 5px 3px; }
+      .room-preview-tiles i { height: 24px; }
+      .room-preview-heading { margin-bottom: 5px; }
+      .room-preview-lines { margin-top: 5px; }
+      .room-preview-title { min-height: 19px; font-size: 7px; }
+      .room-preview-foot { font-size: 6px; }
+      .room-showcase-footer { max-width: 50%; font-size: 7px; }
+      .orbit-one { top: 45px; right: 24px; font-size: 20px; }
+      .orbit-two { display: none; }
+      .room-access-panel { padding: 21px 22px 16px; }
+      .room-access-heading { margin: 24px 0 21px; }
+      .room-access-heading h1 { font-size: 29px; }
+    }
+    @media (max-width: 390px) {
+      .room-gate-actions { grid-template-columns: 1fr; }
+      .room-preview-window { right: 16px; width: 40%; }
+      .room-showcase { min-height: 225px; }
+      .room-access-footer { flex-direction: column; }
+      .room-bar-meta { font-size: 8px; }
+    }
+
 </style>
 </head>
 <body>
   <section class="room-gate" id="roomGate" aria-label="Prompt Toolbox room access">
-    <header class="room-gate-bar"><span class="room-gate-mark">✦</span> PROMPT TOOLBOX <span style="margin-left:auto;font-size:10px;font-weight:normal;">ROOM ACCESS</span></header>
-    <div class="room-gate-body">
-      <h1 class="room-gate-brand">PROMPT <i>TOOLBOX</i></h1>
-      <p class="room-gate-subtitle">YOUR OWN LITTLE WORKSPACE</p>
-      <div class="room-gate-divider">OPEN YOUR SPACE</div>
-      <label class="room-field" for="roomId"><span>공간 ID</span><input id="roomId" type="email" inputmode="email" autocomplete="username" placeholder="name@example.com"></label>
-      <label class="room-field" for="roomPassword"><span>비밀번호</span><input id="roomPassword" type="password" autocomplete="current-password" placeholder="8자 이상" minlength="8"></label>
-      <div class="room-gate-actions">
-        <button class="primary" id="roomOpenButton" type="button">공간 열기</button>
-        <button id="roomCreateButton" type="button">새 공간 만들기</button>
+    <div class="room-shell">
+      <header class="room-gate-bar">
+        <span class="room-gate-mark">✦</span>
+        <span>PROMPT TOOLBOX</span>
+        <span class="room-bar-spacer"></span>
+        <span class="room-bar-meta">ROOM DESK <b>28.0</b></span>
+        <span class="room-bar-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+      </header>
+
+      <div class="room-gate-layout">
+        <aside class="room-showcase">
+          <div class="room-showcase-top">
+            <span class="room-edition">PERSONAL WORKSPACE / 2026</span>
+            <span class="room-edition-mark">PT—28</span>
+          </div>
+          <div class="room-showcase-brand">
+            <div class="room-monogram">P<span>.</span></div>
+            <div class="room-brand-wordmark">PROMPT<br><i>TOOLBOX</i></div>
+          </div>
+          <p class="room-showcase-copy">A LITTLE PLACE<br>FOR BIG IDEAS.</p>
+          <div class="room-preview-window" aria-hidden="true">
+            <div class="room-preview-title"><span>✦</span> MY WORKSPACE <span class="room-preview-dots">_ □ ×</span></div>
+            <div class="room-preview-content">
+              <div class="room-preview-sidebar"><i></i><i></i><i></i><i></i></div>
+              <div class="room-preview-main">
+                <div class="room-preview-heading"></div>
+                <div class="room-preview-tiles"><i></i><i></i><i></i></div>
+                <div class="room-preview-lines"><i></i><i></i><i></i></div>
+              </div>
+            </div>
+            <div class="room-preview-foot"><span>CREATE</span><span>COLLECT</span><span>KEEP</span></div>
+          </div>
+          <div class="room-showcase-footer">
+            <span>YOUR PROMPTS, YOUR RULES.</span>
+            <span>♡</span>
+          </div>
+          <span class="room-showcase-orbit orbit-one" aria-hidden="true">✳</span>
+          <span class="room-showcase-orbit orbit-two" aria-hidden="true">✦</span>
+        </aside>
+
+        <section class="room-access-panel">
+          <div class="room-access-topline">
+            <span>ROOM ACCESS</span>
+            <span><i class="room-online-dot"></i> LOCAL MODE</span>
+          </div>
+          <div class="room-access-heading">
+            <p class="room-kicker">WELCOME TO YOUR DESK</p>
+            <h1>어느 공간으로<br><em>들어갈까요?</em></h1>
+            <p class="room-intro">공간 ID와 비밀번호를 입력해 작업실을 열거나,<br class="desktop-break"> 새로운 공간을 만들어보세요.</p>
+          </div>
+
+          <div class="room-form-rule"><span>ENTER YOUR SPACE</span><i></i></div>
+          <form class="room-form" id="roomAccessForm" novalidate>
+            <label class="room-field" for="roomId">
+              <span class="room-field-label">공간 ID <small>SPACE ID</small></span>
+              <span class="room-input-wrap"><span class="room-input-icon">＠</span><input id="roomId" type="email" inputmode="email" autocomplete="username" placeholder="name@example.com"></span>
+            </label>
+            <label class="room-field" for="roomPassword">
+              <span class="room-field-label">비밀번호 <small>PASSWORD</small></span>
+              <span class="room-input-wrap"><span class="room-input-icon">⌑</span><input id="roomPassword" type="password" autocomplete="current-password" placeholder="8자 이상 입력" minlength="8"></span>
+            </label>
+            <div class="room-gate-actions">
+              <button class="room-open-button" id="roomOpenButton" type="button"><span>공간 열기</span><b>↗</b></button>
+              <button class="room-create-button" id="roomCreateButton" type="button"><span class="room-create-plus">＋</span> 새 공간 만들기</button>
+            </div>
+          </form>
+          <p class="room-gate-message" id="roomGateMessage" role="status" aria-live="polite"></p>
+          <div class="room-local-note"><span class="room-note-lock">▣</span><p><b>THIS DEVICE ONLY</b><br>공간과 자료는 현재 브라우저에 저장됩니다. 실제 이메일 인증이나 다른 기기와의 자동 동기화는 없습니다.</p></div>
+          <footer class="room-access-footer"><span>© PROMPT TOOLBOX</span><span>MADE FOR YOUR IMAGINATION　✦</span></footer>
+        </section>
       </div>
-      <p class="room-gate-message" id="roomGateMessage" role="status" aria-live="polite"></p>
-      <p class="room-gate-note">공간과 자료는 현재 브라우저에만 저장됩니다. 실제 이메일 인증은 없으며, 다른 기기와 자동 동기화되지 않습니다.</p>
     </div>
   </section>
 
@@ -1130,17 +1359,12 @@
 
   <script>
 (() => {
-  const ROOMS_KEY = 'promptToolbox.rooms';
-  const MIGRATION_KEY = 'promptToolbox.roomMigrationDone';
-  const LEGACY_KEYS = [
-    'promptToolbox.customTags',
-    'promptToolbox.customTranslations',
-    'promptToolbox.favorites',
-    'promptToolbox.outfitCustomTags',
-    'promptToolbox.outfitFavorites',
-    'promptToolbox.backupCategories',
-    'promptToolbox.backupEntries'
-  ];
+  const ROOMS_KEY = 'promptToolbox.rooms.v28';
+  const RESET_KEY = 'promptToolbox.v28.roomResetDone';
+  const OLD_ROOMS_KEY = 'promptToolbox.rooms';
+  const OLD_MIGRATION_KEY = 'promptToolbox.roomMigrationDone';
+  const OLD_ROOM_PREFIX = 'promptToolbox.room.';
+  const OLD_BACKUP_DB_PREFIX = 'PromptToolboxBackupLibrary_';
 
   const gate = document.getElementById('roomGate');
   const app = document.getElementById('toolboxWindow');
@@ -1149,6 +1373,7 @@
   const message = document.getElementById('roomGateMessage');
   const openButton = document.getElementById('roomOpenButton');
   const createButton = document.getElementById('roomCreateButton');
+  const accessForm = document.getElementById('roomAccessForm');
 
   function setMessage(text, success = false) {
     message.textContent = text;
@@ -1177,61 +1402,50 @@
     const bytes = crypto.getRandomValues(new Uint8Array(16));
     return btoa(String.fromCharCode(...bytes));
   }
-
-  function openDatabase(name) {
-    return new Promise((resolve, reject) => {
-      if (!('indexedDB' in window)) return reject(new Error('IndexedDB를 사용할 수 없습니다.'));
-      const request = indexedDB.open(name, 1);
-      request.onupgradeneeded = () => {
-        if (!request.result.objectStoreNames.contains('entries')) request.result.createObjectStore('entries', { keyPath: 'id' });
-      };
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error || new Error('저장소를 열지 못했습니다.'));
-      request.onblocked = () => reject(new Error('다른 탭에서 저장소를 사용 중입니다.'));
+  function deleteDatabase(name) {
+    return new Promise(resolve => {
+      try {
+        const request = indexedDB.deleteDatabase(name);
+        request.onsuccess = request.onerror = request.onblocked = () => resolve();
+      } catch (_) { resolve(); }
     });
   }
-  async function copyLegacyDatabase(roomKey) {
-    const oldDb = await openDatabase('PromptToolboxBackupLibrary');
+  async function discardPreviousRoomData() {
+    if (localStorage.getItem(RESET_KEY) === '1') return;
+    // v27 test room credentials and room-scoped settings are intentionally retired.
+    let oldRoomKeys = [];
     try {
-      const records = await new Promise((resolve, reject) => {
-        const tx = oldDb.transaction('entries', 'readonly');
-        const request = tx.objectStore('entries').getAll();
-        request.onsuccess = () => resolve(request.result || []);
-        request.onerror = () => reject(request.error || new Error('기존 백업을 읽지 못했습니다.'));
-      });
-      if (records.length) {
-        const newDb = await openDatabase(`PromptToolboxBackupLibrary_${roomKey}`);
-        try {
-          await new Promise((resolve, reject) => {
-            const tx = newDb.transaction('entries', 'readwrite');
-            const store = tx.objectStore('entries');
-            records.forEach(record => store.put(record));
-            tx.oncomplete = resolve;
-            tx.onerror = () => reject(tx.error || new Error('기존 백업을 옮기지 못했습니다.'));
-            tx.onabort = () => reject(tx.error || new Error('기존 백업 이전이 취소됐습니다.'));
-          });
-        } finally { newDb.close(); }
-      }
-    } finally { oldDb.close(); }
-  }
-  async function migrateLegacyData(roomKey) {
-    if (localStorage.getItem(MIGRATION_KEY) === '1') return;
-    const prefix = `promptToolbox.room.${roomKey}.`;
-    LEGACY_KEYS.forEach(key => {
-      const oldValue = localStorage.getItem(key);
-      const newKey = prefix + key;
-      if (oldValue !== null && localStorage.getItem(newKey) === null) localStorage.setItem(newKey, oldValue);
-    });
-    try {
-      await copyLegacyDatabase(roomKey);
-      localStorage.setItem(MIGRATION_KEY, '1');
-    } catch (error) {
-      console.warn('Legacy IndexedDB migration will be retried on the next room open.', error);
-      setMessage('공간은 만들었지만 기존 사진 백업 이전을 마치지 못했어요. 이 공간에 다시 접속하면 재시도합니다.');
+      const oldRooms = JSON.parse(localStorage.getItem(OLD_ROOMS_KEY) || '{}');
+      if (oldRooms && typeof oldRooms === 'object' && !Array.isArray(oldRooms)) oldRoomKeys = Object.keys(oldRooms);
+    } catch (_) {}
+    localStorage.removeItem(OLD_ROOMS_KEY);
+    localStorage.removeItem(OLD_MIGRATION_KEY);
+    const oldKeys = [];
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      if (key && key.startsWith(OLD_ROOM_PREFIX)) oldKeys.push(key);
     }
+    oldKeys.forEach(key => localStorage.removeItem(key));
+
+    // Remove only previous per-room IndexedDB stores. The unscoped legacy database is not touched.
+    if ('indexedDB' in window) {
+      const names = new Set(oldRoomKeys.map(key => OLD_BACKUP_DB_PREFIX + key));
+      if (typeof indexedDB.databases === 'function') {
+        try {
+          const databases = await indexedDB.databases();
+          databases.map(database => database.name)
+            .filter(name => name && name.startsWith(OLD_BACKUP_DB_PREFIX))
+            .forEach(name => names.add(name));
+        } catch (error) {
+          console.warn('Could not enumerate previous room databases.', error);
+        }
+      }
+      await Promise.all(Array.from(names, deleteDatabase));
+    }
+    localStorage.setItem(RESET_KEY, '1');
   }
+
   async function enterRoom(roomKey, roomId) {
-    await migrateLegacyData(roomKey);
     passwordInput.value = '';
     window.__ptRoomKey = roomKey;
     window.__ptRoomId = roomId;
@@ -1245,6 +1459,7 @@
   }
 
   async function createRoom() {
+    if (!(await cleanupReady)) return;
     const id = normalizeId(idInput.value);
     const password = passwordInput.value;
     if (!validId(id)) return setMessage('공간 ID는 이메일 형식으로 입력해주세요. 실제 메일을 보내지는 않습니다.');
@@ -1268,6 +1483,7 @@
   }
 
   async function openRoom() {
+    if (!(await cleanupReady)) return;
     const id = normalizeId(idInput.value);
     const password = passwordInput.value;
     if (!validId(id)) return setMessage('공간 ID는 이메일 형식으로 입력해주세요.');
@@ -1277,7 +1493,7 @@
     try {
       const key = await hashId(id);
       const room = readRooms()[key];
-      if (!room || room.id !== id) return setMessage('해당 공간이 없습니다. 먼저 새 공간을 만들어주세요.');
+      if (!room || room.id !== id) return setMessage('해당 공간이 없습니다. 새 공간을 만들어주세요.');
       const verifier = await passwordVerifier(password, room.salt);
       if (verifier !== room.verifier) return setMessage('비밀번호가 맞지 않습니다.');
       await enterRoom(key, id);
@@ -1288,16 +1504,22 @@
     }
   }
 
+  const cleanupReady = discardPreviousRoomData().then(() => true).catch(error => {
+    console.error('Room reset could not be completed.', error);
+    setMessage('이전 공간 데이터를 정리하지 못했습니다. 브라우저 저장소를 확인해주세요.');
+    return false;
+  });
   openButton.addEventListener('click', openRoom);
   createButton.addEventListener('click', createRoom);
-  passwordInput.addEventListener('keydown', event => { if (event.key === 'Enter') openRoom(); });
+  accessForm.addEventListener('submit', event => { event.preventDefault(); openRoom(); });
+  passwordInput.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); openRoom(); } });
   idInput.addEventListener('keydown', event => { if (event.key === 'Enter') passwordInput.focus(); });
   window.lockPromptRoom = () => window.location.reload();
 })();
 </script>
 <script>
 function startPromptToolbox() {
-  const ROOM_STORAGE_PREFIX = `promptToolbox.room.${window.__ptRoomKey}.`;
+  const ROOM_STORAGE_PREFIX = `promptToolbox.v28.room.${window.__ptRoomKey}.`;
 
     // 카테고리별 태그 데이터입니다. 필요할 때 이 목록에 항목을 추가할 수 있습니다.
     const categoryData = {
@@ -4306,7 +4528,7 @@ function startPromptToolbox() {
 
 
     // Prompt Backup Library: IndexedDB stores text and image blobs locally in this browser.
-    const BACKUP_DB_NAME = 'PromptToolboxBackupLibrary_' + window.__ptRoomKey;
+    const BACKUP_DB_NAME = 'PromptToolboxBackupLibrary_v28_' + window.__ptRoomKey;
     const BACKUP_DB_VERSION = 1;
     const DEFAULT_BACKUP_CATEGORIES = ['일반 프롬프트', '캐릭터', '배경', '포즈·구도', '옷장', 'AU·IF', '소품', '기타'];
     let backupDBPromise = null;
